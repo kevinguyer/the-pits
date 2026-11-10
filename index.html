@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#141210">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="The Pits">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>The Pits</title>
+<style>
+:root{--paper:#ebe6d6;--ink:#141210;--pink:#ff2e7e;--dim:#6b665a;--line:rgba(20,18,16,.25)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--ink);overscroll-behavior:none}
+body{color:var(--ink);font:14px/1.35 "Courier New",Courier,monospace;user-select:none;-webkit-user-select:none}
+.screen{position:fixed;inset:0;max-width:520px;margin:0 auto;background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  padding:calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 12px)}
+.hd{font-family:Impact,Haettenschweiler,"Arial Narrow Bold","Arial Black",sans-serif;letter-spacing:.04em;text-transform:uppercase}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:2px solid var(--ink);border-radius:0;min-height:44px;padding:0 12px}
+button:active{transform:translate(1px,1px)}
+button.big{width:100%;background:var(--ink);color:var(--paper);font:22px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.06em;min-height:54px;box-shadow:5px 5px 0 var(--pink)}
+button.big:disabled{opacity:.45;box-shadow:none}
+
+/* ---------- setup ---------- */
+#setup{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(env(safe-area-inset-bottom) + 96px)}
+.ransom{display:flex;justify-content:center;gap:3px;margin:6px 0 2px;flex-wrap:wrap}
+.ransom span{font:900 44px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;padding:3px 7px;display:inline-block}
+.ransom span.sp{width:10px;padding:0;background:none!important}
+.ransom .a{background:var(--ink);color:var(--paper);transform:rotate(-4deg)}
+.ransom .b{background:var(--pink);color:var(--ink);transform:rotate(3deg) translateY(3px)}
+.ransom .c{border:3px solid var(--ink);transform:rotate(-2deg);font-family:Georgia,serif}
+.ransom .d{background:var(--paper);box-shadow:3px 3px 0 var(--ink);border:1px solid var(--ink);transform:rotate(5deg) translateY(-2px);font-family:"Courier New",monospace}
+.tag{text-align:center;color:var(--dim);margin:8px 0 12px;font-size:13px}
+h2{font:20px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.06em;margin:18px 0 6px;display:flex;align-items:baseline;gap:8px}
+h2 button{margin-left:auto;min-height:30px;font:700 11px "Courier New",monospace;letter-spacing:0;padding:0 8px}
+h2 small{font:12px "Courier New",monospace;color:var(--dim);letter-spacing:0}
+h2::before{content:"";width:12px;height:12px;background:var(--pink);display:inline-block;transform:rotate(12deg)}
+.role{font-weight:700;text-transform:uppercase;font-size:11px;margin:10px 0 4px;letter-spacing:.1em}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.card{text-align:left;padding:6px 6px 7px;min-height:0;display:block;position:relative;background:rgba(255,255,255,.25);line-height:1.2}
+.card b{display:block;font-size:12.5px;line-height:1.1;min-height:2.2em;overflow-wrap:anywhere}
+#vans .card b,.modes .card b{min-height:0}
+.card .cost{font-size:12px;color:var(--dim)}
+.card .st{font-size:10px;white-space:nowrap;letter-spacing:-.02em}
+.card .st em{font-style:normal;display:inline-block;width:27px;color:var(--dim)}
+.card.on{background:var(--ink);color:var(--paper)}
+.card.on .cost,.card.on .st em{color:#b9b3a2}
+.card.on::after{content:"";position:absolute;top:-7px;right:8px;width:34px;height:13px;background:var(--pink);opacity:.9;transform:rotate(6deg)}
+.blurb{font-size:12px;margin:5px 0 0;padding-left:8px;border-left:3px solid var(--pink);min-height:32px}
+.slide{margin:4px 0}
+.slide .lab{display:flex;justify-content:space-between;font-weight:700}
+.slide .lab span:last-child{color:var(--pink);background:var(--ink);padding:0 6px}
+.slide .note{font-size:12px;color:var(--dim);min-height:17px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:36px;background:none;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:8px;background:repeating-linear-gradient(90deg,var(--ink) 0 6px,transparent 6px 9px)}
+input[type=range]::-moz-range-track{height:8px;background:repeating-linear-gradient(90deg,var(--ink) 0 6px,transparent 6px 9px)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:30px;margin-top:-11px;background:var(--pink);border:3px solid var(--ink);transform:rotate(4deg)}
+input[type=range]::-moz-range-thumb{width:22px;height:26px;background:var(--pink);border:3px solid var(--ink);border-radius:0}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.modes .card b{white-space:normal}
+.modes .card span{font-size:11px}
+.name{display:flex;gap:6px}
+.name input{flex:1;min-width:0;font:700 16px "Courier New",monospace;background:rgba(255,255,255,.35);border:2px solid var(--ink);padding:0 10px;height:44px;color:var(--ink);border-radius:0;user-select:text;-webkit-user-select:text}
+#bar{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--paper);border-top:3px solid var(--ink);
+  padding:8px 12px calc(env(safe-area-inset-bottom) + 10px);display:flex;gap:10px;align-items:center;z-index:5}
+#bar .money{flex:0 0 auto;line-height:1.15}
+#bar .money b{font:24px Impact,Haettenschweiler,"Arial Black",sans-serif;display:block}
+#bar .money small{font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+#bar .money.over b{color:var(--pink)}
+#hallList{margin:0;padding:0 0 0 22px;font-size:12px}
+#hallList li{margin-bottom:6px}
+#hallList b{font:15px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.03em}
+#hallList span{color:var(--dim)}
+#bestLine{text-align:center;font-size:12px;color:var(--dim);margin-top:14px}
+
+/* ---------- run ---------- */
+#run{display:flex;flex-direction:column;gap:6px}
+#rtop{display:flex;align-items:flex-end;gap:8px}
+#rname{flex:1;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+#rname small{display:block;font-weight:400;color:var(--dim);font-size:11px}
+#fans{font:34px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;text-align:right}
+#fans small{display:block;font:700 10px "Courier New",monospace;letter-spacing:.14em;color:var(--pink);background:var(--ink);padding:1px 5px;margin-top:2px}
+#stage{position:relative;flex:0 0 42dvh;border:3px solid var(--ink);background:rgba(255,255,255,.22);overflow:hidden}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#flyer{position:absolute;left:7%;right:7%;top:50%;transform:translateY(-50%) rotate(-1.5deg);background:#f7f3e6;border:2px solid var(--ink);
+  box-shadow:6px 6px 0 rgba(20,18,16,.85);padding:14px 12px 12px;animation:slap .18s ease-out}
+#flyer::before,#flyer::after{content:"";position:absolute;top:-9px;width:54px;height:17px;background:var(--pink);opacity:.85}
+#flyer::before{left:10px;transform:rotate(-7deg)}#flyer::after{right:10px;transform:rotate(5deg)}
+#flyer h3{margin:0 0 6px;font:22px/1.05 Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.04em;text-transform:uppercase}
+#flyer p{margin:0 0 8px;font-size:13.5px}
+#flyer .opts{display:grid;gap:7px;margin-top:10px}
+#flyer .opts button{text-align:left;font-weight:700;background:var(--ink);color:var(--paper);padding:8px 10px;min-height:46px}
+#flyer .opts button small{display:block;font-weight:400;color:#b9b3a2;font-size:11px}
+@keyframes slap{from{transform:translateY(-50%) rotate(-9deg) scale(1.35);opacity:0}}
+.chips{display:flex;flex-wrap:wrap;gap:4px;text-indent:0}
+#log .chips{display:inline-flex;vertical-align:middle;font-weight:400}
+.chip{font-size:11px;font-weight:700;padding:1px 5px;border:1.5px solid var(--ink);white-space:nowrap}
+.chip.up{background:var(--ink);color:var(--paper)}
+.chip.dn{background:var(--pink);color:var(--ink)}
+#meters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.m{font-size:10px;text-transform:uppercase;letter-spacing:.06em;line-height:1.2}
+.m b{display:block;font-size:13px;letter-spacing:0;white-space:nowrap}
+.m .tr{height:9px;border:2px solid var(--ink);margin-top:2px;background:rgba(255,255,255,.3)}
+.m .tr i{display:block;height:100%;background:var(--ink);transition:width .5s}
+.m.low .tr i{background:var(--pink)}
+#log{flex:1;min-height:0;overflow-y:auto;border-top:2px dashed var(--ink);padding-top:6px;font-size:12.5px}
+#log>div{margin-bottom:5px;padding-left:30px;text-indent:-30px}
+#log>div>b{display:inline-block;width:30px;text-indent:0;color:var(--dim)}
+#log>div.gig{font-weight:700}
+#log>div.lap{background:var(--ink);color:var(--paper);padding:2px 6px;text-indent:0;font-weight:700;text-transform:uppercase}
+#ctl{display:flex;gap:6px}
+#ctl button{flex:1;min-height:40px;font-weight:700;font-size:13px}
+#ctl button.on{background:var(--ink);color:var(--paper)}
+
+/* ---------- obituary ---------- */
+#obit{overflow-y:auto;text-align:center;z-index:8}
+#obit .frame{border:4px double var(--ink);padding:14px 12px;margin-top:4px}
+#obit h1{font:30px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.08em;margin:0}
+#oname{font-weight:700;font-size:17px;margin:8px 0 2px;word-break:break-word}
+#ofans{font:68px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;margin-top:8px}
+#orank{display:inline-block;background:var(--pink);font:20px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.06em;padding:3px 10px;transform:rotate(-2deg);margin:8px 0 12px;text-transform:uppercase}
+#obit h4{margin:12px 0 3px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+#ocause{font-size:15px;font-weight:700}
+#ostats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px}
+#ostats div{border:2px solid var(--ink);padding:4px 2px;font-size:10px;text-transform:uppercase}
+#ostats b{display:block;font:20px Impact,Haettenschweiler,"Arial Black",sans-serif}
+#obit .txt{font-size:12.5px;text-align:left}
+#obest{margin:10px 0;font-weight:700}
+#obit .btns{display:grid;gap:10px;margin-top:14px}
+#obit .btns .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ---------- deliberate sloppiness: nothing here is straight ---------- */
+.screen{overflow-x:hidden;box-shadow:inset 7px 0 9px -5px rgba(0,0,0,.4),inset -3px 0 6px -4px rgba(0,0,0,.25)}
+.screen::before{content:"";position:absolute;left:71%;top:0;bottom:0;width:3px;background:rgba(20,18,16,.06);pointer-events:none}
+#setup::after{content:"";position:absolute;right:-34px;top:470px;width:150px;height:140px;border-radius:50%;border:8px solid rgba(96,62,20,.13);
+  box-shadow:inset 0 0 0 2px rgba(96,62,20,.07),14px 9px 0 -68px rgba(96,62,20,.1);transform:rotate(24deg);pointer-events:none}
+.scrawl,.tag,#bestLine,.slide .note{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive}
+.tag{transform:rotate(-1.6deg);font-size:12.5px;color:var(--ink)}
+#bestLine{transform:rotate(1.2deg)}
+.slide .note{transform:rotate(-.6deg);transform-origin:left;font-size:11.5px}
+h2{transform:rotate(-1.3deg);transform-origin:left center;text-shadow:2px 1px 0 rgba(255,46,126,.6)}
+h2:nth-of-type(even){transform:rotate(.9deg)}
+h2::before{width:15px;height:11px;transform:rotate(-17deg) skewX(-12deg)}
+h2:nth-of-type(even)::before{transform:rotate(23deg);width:10px;height:15px}
+h2 button{transform:rotate(3deg);text-shadow:none;border-width:2px 3px 3px 2px;background:var(--paper)}
+.role{display:inline-block;background:var(--ink);color:var(--paper);padding:1px 7px 0;transform:rotate(-2.2deg);margin:12px 0 6px -3px}
+#lineup .role:nth-of-type(even){transform:rotate(1.6deg);margin-left:6px}
+button{border-width:2px 3px 3px 2px;border-radius:2px 5px 3px 6px/5px 2px 6px 3px}
+.card{box-shadow:2px 3px 0 rgba(20,18,16,.28);transform:rotate(-1.3deg)}
+.card:nth-child(3n+2){transform:rotate(.9deg) translateY(3px);border-width:3px 2px 2px 3px;border-radius:5px 2px 6px 2px/2px 6px 3px 5px}
+.card:nth-child(3n){transform:rotate(-.5deg) translateY(-2px);border-width:2px 2px 4px 3px}
+.row:nth-of-type(even) .card{transform:rotate(1.1deg) translateY(2px)}
+.row:nth-of-type(even) .card:nth-child(3n+2){transform:rotate(-1.6deg)}
+.row:nth-of-type(even) .card:nth-child(3n){transform:rotate(.6deg) translateY(4px)}
+.card.on{transform:rotate(-2.6deg) scale(1.04);box-shadow:4px 5px 0 var(--pink);z-index:1}
+.card:nth-child(even).on{transform:rotate(2.2deg) scale(1.04)}
+.card.on::after{width:42px;height:15px;top:-9px;right:14px;transform:rotate(-11deg)}
+.card:nth-child(3n+2).on::after{right:auto;left:8px;transform:rotate(14deg);width:30px}
+.card:nth-child(3n).on::after{transform:rotate(38deg);right:-9px;top:4px}
+.blurb{transform:rotate(.5deg);background:rgba(255,255,255,.28);padding:3px 6px 3px 8px;border-left-width:5px;margin-top:9px}
+#lineup .blurb:nth-of-type(even){transform:rotate(-.8deg);margin-left:8px}
+.name input{transform:rotate(-.8deg);border-width:2px 3px 4px 2px}
+#reroll{transform:rotate(6deg)}
+.slide .lab span:last-child{transform:rotate(3deg)}
+.slide:nth-of-type(odd) .lab span:last-child{transform:rotate(-4deg)}
+input[type=range]::-webkit-slider-thumb{transform:rotate(-7deg);border-width:3px 4px 4px 3px}
+#bar{border-top-width:4px;border-image:repeating-linear-gradient(92deg,var(--ink) 0 23px,transparent 23px 26px,var(--ink) 26px 61px,transparent 61px 63px) 4}
+button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0 rgba(20,18,16,.25)}
+#bar .money{transform:rotate(2.5deg)}
+#hallList li:nth-child(odd){transform:rotate(-.7deg)}
+#hallList li:nth-child(even){transform:rotate(.6deg);margin-left:7px}
+#hallList li:first-child b{background:var(--pink);padding:0 4px}
+/* run screen */
+#rname{transform:rotate(-1deg);transform-origin:left}
+#fans{transform:rotate(2.5deg)}
+#fans small{transform:rotate(-4deg)}
+#stage{border-width:3px 4px 5px 3px;transform:rotate(.35deg);box-shadow:3px 4px 0 rgba(20,18,16,.3)}
+#stage::after{content:"";position:absolute;left:-12px;top:14px;width:46px;height:15px;background:var(--pink);opacity:.8;transform:rotate(-41deg);pointer-events:none}
+.m:nth-child(odd){transform:rotate(-1.6deg)}
+.m:nth-child(even){transform:rotate(1.1deg) translateY(2px)}
+.m .tr{border-width:2px 3px 3px 2px}
+#log{border-top-width:3px}
+#log>div:nth-child(3n){transform:rotate(-.35deg)}
+#log>div:nth-child(3n+1){transform:rotate(.3deg)}
+#log>div.lap{width:fit-content;transform:rotate(-1.4deg);box-shadow:3px 3px 0 var(--pink);margin:8px 0 9px 4px}
+.chip:nth-child(odd){transform:rotate(-2deg)}
+.chip:nth-child(even){transform:rotate(1.5deg)}
+#ctl button:nth-child(1){transform:rotate(-1.4deg)}
+#ctl button:nth-child(2){transform:rotate(.9deg) translateY(2px)}
+#ctl button:nth-child(3){transform:rotate(-2deg)}
+/* obituary */
+#obit .frame{position:relative;transform:rotate(-.8deg);border-width:5px 4px 6px 4px;background:rgba(255,255,255,.14);box-shadow:4px 5px 0 rgba(20,18,16,.3)}
+#obit .frame::before,#obit .frame::after{content:"";position:absolute;top:-10px;width:62px;height:19px;background:var(--pink);opacity:.85}
+#obit .frame::before{left:-14px;transform:rotate(-33deg)}
+#obit .frame::after{right:-14px;transform:rotate(29deg)}
+#obit h1{text-shadow:3px 2px 0 rgba(255,46,126,.6);transform:rotate(1.2deg)}
+#ofans{transform:rotate(-2deg);text-shadow:4px 3px 0 rgba(255,46,126,.55)}
+#orank{transform:rotate(-4deg);box-shadow:3px 3px 0 var(--ink)}
+#ocause{transform:rotate(.7deg)}
+#ostats div:nth-child(odd){transform:rotate(-2.2deg)}
+#ostats div:nth-child(even){transform:rotate(1.7deg) translateY(3px)}
+#obit h4{display:block;width:fit-content;margin:14px auto 5px;background:var(--ink);color:var(--paper);padding:1px 7px;transform:rotate(-1.5deg)}
+#obit h4:nth-of-type(even){transform:rotate(1.3deg)}
+#obit .txt:nth-of-type(odd){transform:rotate(.4deg)}
+#obest{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(-2deg)}
+#obit .btns .two button:first-child{transform:rotate(1.2deg)}
+#obit .btns .two button:last-child{transform:rotate(-1.8deg)}
+</style>
+</head>
+<body>
+
+<!-- ================= SETUP ================= -->
+<section id="setup" class="screen">
+  <div class="ransom" id="title"></div>
+  <p class="tag">Every band breaks up. How big can yours get first?</p>
+
+  <div class="name"><input id="bname" maxlength="28" aria-label="Band name" autocomplete="off" spellcheck="false"><button id="reroll" aria-label="New band name">&#9860;</button></div>
+
+  <h2>THE BAND <button id="recast">NEW AUDITIONS</button></h2>
+  <div id="lineup"></div>
+
+  <h2>THE VAN</h2>
+  <div class="row" id="vans"></div>
+  <p class="blurb" id="vanBlurb"></p>
+
+  <h2>THE SETLIST</h2>
+  <div class="slide">
+    <div class="lab"><span>Aggression</span><span id="aggVal"></span></div>
+    <input type="range" id="agg" min="1" max="10" step="1">
+    <div class="note" id="aggNote"></div>
+  </div>
+
+  <h2>THE MERCH</h2>
+  <div class="slide">
+    <div class="lab"><span>Merch budget</span><span id="merchVal"></span></div>
+    <input type="range" id="merch" min="0" max="1000" step="50">
+    <div class="note" id="merchNote"></div>
+  </div>
+
+  <h2>WHO'S DRIVING</h2>
+  <div class="modes" id="modes">
+    <button class="card" data-mode="auto"><b>HANDS OFF</b><span>Sit back. The band makes its own decisions. Badly.</span></button>
+    <button class="card" data-mode="manual"><b>BAND MANAGER</b><span>Same tour, but you make two big calls on the road.</span></button>
+  </div>
+  <p id="bestLine"></p>
+  <div id="hall" hidden><h2>THE GRAVEYARD <button id="wipe">WIPE</button></h2><ol id="hallList"></ol></div>
+
+  <div id="bar">
+    <div class="money" id="money"><small>Gas money</small><b id="left"></b></div>
+    <button class="big" id="go">START THE TOUR</button>
+  </div>
+</section>
+
+<!-- ================= RUN ================= -->
+<section id="run" class="screen" hidden>
+  <div id="rtop">
+    <div id="rname"></div>
+    <div id="fans"><span id="fansN">0</span><small>FANS</small></div>
+  </div>
+  <div id="stage"><canvas id="cv"></canvas><div id="flyer" hidden></div></div>
+  <div id="meters">
+    <div class="m" id="mCash">Cash<b></b><div class="tr"><i></i></div></div>
+    <div class="m" id="mVan">Van<b></b><div class="tr"><i></i></div></div>
+    <div class="m" id="mCoh">Band<b></b><div class="tr"><i></i></div></div>
+    <div class="m" id="mCred">Cred<b></b><div class="tr"><i></i></div></div>
+  </div>
+  <div id="log"></div>
+  <div id="ctl">
+    <button id="spd">SPEED 1&times;</button>
+    <button id="snd">SOUND ON</button>
+    <button id="quit">QUIT</button>
+  </div>
+</section>
+
+<!-- ================= OBITUARY ================= -->
+<section id="obit" class="screen" hidden>
+  <div class="frame">
+    <h1>TOUR OBITUARY</h1>
+    <div id="oname"></div>
+    <div id="omode" style="font-size:11px;color:var(--dim)"></div>
+    <div id="ofans"></div>
+    <div style="font-size:11px;letter-spacing:.2em;font-weight:700">FANS GAINED</div>
+    <div id="orank"></div>
+    <h4>Cause of death</h4>
+    <div id="ocause"></div>
+    <div id="ostats"></div>
+    <h4>Best night</h4><div class="txt" id="obestgig"></div>
+    <h4>Worst night</h4><div class="txt" id="oworstgig"></div>
+    <div id="ochemWrap"><h4>What you didn't know</h4><div class="txt" id="ochem"></div></div>
+    <div id="obest"></div>
+  </div>
+  <div class="btns">
+    <button class="big" id="again">SAME BAND, NEW TOUR</button>
+    <div class="two"><button id="newband">CHANGE THE PLAN</button><button id="share">SHARE</button></div>
+  </div>
+</section>
+
+<script>
+/*ENGINE-START*/
+// ---------------------------------------------------------------------------
+// Sim engine. No DOM in here; the UI asks for one "beat" at a time.
+// ---------------------------------------------------------------------------
+const BUDGET = 2000;
+const ROLES = ['vocals', 'guitar', 'bass', 'drums'];
+const CAST = {
+  vocals: [
+    {id:'spit',   t:4,c:5,e:4,s:3, cost:300, names:['Spit','Johnny Tetanus','Phlegm Fatale','Mucus Aurelius','Scabies Jane','Gob','Bile Duct Tony','Rabid Debbie',"Dick Fungus","Phil Latio","Anita Shower","Chlamydia Jones","Taint Nick"], blurb:'Huge charisma. Wins crowds. Will fight a sound guy over nothing.'},
+    {id:'brenda', t:3,c:1,e:2,s:4, cost:150, names:['Brenda','Audit Annie','W-2 Wendy','Fiscal Deb','Net-30 Janet','Carol (Payroll)','Escrow Flo','Linda from HR',"Anita Raise","Accrual Intentions","Fiscal Sharon"], blurb:'From accounting. Screams like a spreadsheet error. Merch sells better.'},
+    {id:'lord',   t:5,c:3,e:5,s:2, cost:450, names:['Lord Tinnitus','Baron Von Feedback','Count Backwards','Duke Nausea','Sir Vomitus','The Archbishop','Prince Harming','Pope Urinal II',"Lord Girth","Dong Quixote","Sir Cumference","His Royal Thighness"], blurb:'A once-in-a-generation voice. Insists on the full title, every time. Ego only goes up.'}],
+  guitar: [
+    {id:'stitches',t:4,c:4,e:3,s:3, cost:300, names:['Stitches','Roadrash','Concussion Dan','Six Staples','Tourniquet','Femur','Skin Graft Greg','Whiplash Trish',"Groin Pull Gary","Hernia","Compound Fracture"], blurb:'Dives off anything. Crowds love it. So do emergency rooms.'},
+    {id:'trevor', t:5,c:1,e:4,s:4, cost:400, names:['Trevor','Julian','Tristan','Sebastian','Dorian','Thelonious Punk','Alistair','Crispin',"Tarquin","Ludwig van Blowhard"], blurb:'Jazz school dropout. Sulks when the setlist gets too dumb and loud.'},
+    {id:'rat',    t:2,c:3,e:1,s:5, cost:50,  names:['Rat','Roach','Weasel','Grub','Dumpster Dave','Raccoon','Tick','Crusty Pete',"Skidmark","Crabs","Butt Rash Bob","Taint"], blurb:'Knows two chords. Can fix a van with a coat hanger for almost nothing.'}],
+  bass: [
+    {id:'dale',   t:1,c:1,e:1,s:5, cost:0,   names:['Dale','Gary','Doug','Keith','Ron','Neil','Carl','Just Steve',"Richard (Dick)","Normal Phil"], blurb:'Cannot play. Owns the PA. The only one with a licence. Drives gently.'},
+    {id:'vex',    t:4,c:3,e:3,s:3, cost:300, names:['Vex','Hex','Jinx','Roxy Mortis','Lola Regret','Nyx','Trixie Hazard','Bad Idea Brad',"Sloppy Seconds","Walk of Shane","Ivana Regret","Friends With Benedict"], blurb:'Has an ex in every town. They all come to the show. Not all of them are happy.'},
+    {id:'marge',  t:3,c:2,e:2,s:4, cost:200, names:['Sister Margaret','Sister Agnes','Sister Mary Mayhem','Nun Chuck','Sister Act Up','Sister Bernadeath','Holy Moly Dolores','Sister Fister',"Sister Blister","Nun of Your Business","Sister Mary Jane","Sister Spanks"], blurb:'Lapsed nun. Ends fistfights with a single look.'}],
+  drums: [
+    {id:'mother', t:5,c:2,e:3,s:3, cost:400, names:['Mother','Nana','Auntie Christ','Grandma Mosh','Mrs. Kowalski','Ma','Meemaw','Great-Aunt Riot',"Granny Panties","Nana Spanks","Gam-Gam Slam"], blurb:'54. The best musician here by a mile. Zero patience for nonsense.'},
+    {id:'gus',    t:3,c:5,e:2,s:4, cost:150, names:['Gus','Critter','Mange','Fleabag','Kennel Kyle','Feral Cheryl','Roadkill Rick','Worms',"Dog Breath","Heavy Petting","Leg Humper"], blurb:'Adopts every stray animal between here and the next gig.'},
+    {id:'click',  t:4,c:1,e:0,s:2, cost:250, names:['Click Track','DR-666','The Metronome','Beep','Robo-Dave','808 Lives','Dolly','Drummer.exe',"The Vibrator","Auto-Erotic","Sir Beats-a-Lot"], blurb:'A drum machine taped to a hand truck. Never argues. Purists hate it. Fears rain.'}]
+};
+// Each cast member is an archetype: stats and quirk are fixed, the name is re-rolled.
+const NAME = {};
+function rollNames(){ for(const r of ROLES) for(const m of CAST[r]) m.name = NAME[m.id] = m.names[Math.floor(Math.random()*m.names.length)]; }
+rollNames();
+const fill = t => String(t).replace(/\{(\w+)\}/g, (all,id) => NAME[id] || all);
+const VANS = [
+  {id:'coffin',  name:'The Coffin',  the:'the Coffin',     cost:0,   bd:.2, wear:1.5, gas:1.0, comfort:0,   rel:1, cmf:1, blurb:'A retired hearse. Free. Breaks down constantly. Extremely punk, so cred starts high.'},
+  {id:'sprinter',name:'Stolen Sprinter',the:'the Sprinter',cost:250, bd:.10, wear:1.0, gas:1.1, comfort:.35,  rel:3, cmf:3, blurb:'Bought off a guy named Deke. No paperwork. The cops are curious.'},
+  {id:'bus',     name:'Church Bus',  the:'the church bus',     cost:500, bd:.04, wear:.7,  gas:1.5, comfort:.7, rel:5, cmf:5, blurb:'Reliable and roomy, so fewer fights. Drinks gas. Not remotely punk.'}
+];
+const TOWNS = [
+  {name:'Rust Falls',      venue:'The Sticky Floor',        t:7,  cap:40,  x:.15,y:.22},
+  {name:'Port Regret',     venue:'VFW Hall #666',           t:6,  cap:55,  x:.45,y:.13},
+  {name:'Mildew',          venue:"Chad's Mom's Basement",   t:10, cap:28,  x:.78,y:.2},
+  {name:'East Nowhere',    venue:'Bean There Coffee',       t:2,  cap:32,  x:.87,y:.5},
+  {name:'Gravel City',     venue:'The Skate Barn',          t:9,  cap:70,  x:.72,y:.8},
+  {name:'Saint Nope',      venue:'Lane 9, Bowl-O-Rama',     t:5,  cap:50,  x:.43,y:.87},
+  {name:'Tetanus Springs', venue:'The Abattoir',            t:8,  cap:90,  x:.16,y:.76},
+  {name:'Dullsville',      venue:'Dullsville Civic Ballroom',t:4, cap:110, x:.1, y:.5}
+];
+const CHEM = [
+  {a:'spit', b:'vex',    coh:-1,   text:'{spit} and {vex} used to date. The tension sold tickets and ruined breakfasts.'},
+  {a:'lord', b:'trevor', coh:-1.5, text:'{lord} and {trevor} each believed they were the frontman.'},
+  {a:'lord', b:'mother', coh:-1,   text:'{mother} refused to use {lord}\'s full title. Not once.'},
+  {a:'dale', b:'mother', coh:1,    text:'{mother} quietly adopted {dale}. Nobody in this band has ever eaten so well.'},
+  {a:'rat',  b:'gus',    coh:1,    text:'{rat} and {gus} were best friends, which was good for morale and bad for property.'},
+  {a:'brenda',b:'click', coh:.6,   text:'{brenda} and {click} ran the tour on time. It was eerie.'},
+  {a:'marge',b:'spit',   coh:.5,   text:'{marge} kept {spit} away from every sound guy in the country.'},
+  {a:'stitches',b:'click',coh:-.6, text:'{stitches} kept trying to stage dive onto the drum machine.'}
+];
+const RANKS = [[0,'Played to the Bartender'],[200,'Garage Rumor'],[600,'Local Nuisance'],[1300,'Scene Staple'],[2500,'Regional Menace'],[4500,'Cult Legends'],[8000,'Ruined by Success']];
+function rankFor(f){let r=RANKS[0][1];for(const [n,l] of RANKS)if(f>=n)r=l;return r}
+function setupCost(cfg){
+  return ROLES.reduce((a,r)=>a+CAST[r].find(m=>m.id===cfg.lineup[r]).cost,0)+VANS.find(v=>v.id===cfg.van).cost+cfg.merch;
+}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+function newGame(cfg, seed){
+  const R = mulberry(seed>>>0);
+  const rnd=(a,b)=>a+(b-a)*R(), chance=p=>R()<p, pick=a=>a[Math.floor(R()*a.length)];
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const members = ROLES.map(r=>Object.assign({}, CAST[r].find(m=>m.id===cfg.lineup[r]), {role:r, hurt:0}));
+  const van = VANS.find(v=>v.id===cfg.van);
+  const merch = Math.min(1, cfg.merch/1000), agg = cfg.agg;
+  const VThe = van.the[0].toUpperCase()+van.the.slice(1);
+  const has = id=>members.some(m=>m.id===id);
+  const by = role=>members.find(m=>m.role===role);
+  const avg = k=>members.reduce((a,m)=>a+m[k],0)/members.length;
+  const top = k=>members.slice().sort((a,b)=>b[k]-a[k])[0];
+  const chem = ()=>CHEM.filter(c=>has(c.a)&&has(c.b));
+  const chemOn = (a,b)=>has(a)&&has(b);
+  const two = ()=>{const p=members.filter(m=>m.id!=='click');const a=pick(p);let b=pick(p);while(b===a)b=pick(p);return [a,b]};
+
+  const S = {fans:0, cash:BUDGET-setupCost(cfg), van:100, coh:75, cred:van.id==='coffin'?62:van.id==='bus'?42:50, fatigue:0, stop:0, lap:1, town:0,
+             phase:'travel', lastMotel:-9, lastPress:-9, pawned:false, over:false, end:null, clickWet:false};
+  const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null};
+  const blame = {};
+  const used = {};
+  const dil = {first:3+Math.floor(R()*3), second:9+Math.floor(R()*3), done:0, pending:null, seen:{}};
+
+  function apply(fx, tag){
+    const d = {};
+    if(fx.coh<0 && tag==='chaos' && has('mother')) fx.coh*=1.4;
+    for(const k of ['fans','cash','van','coh','cred']){
+      if(!fx[k]) continue;
+      const before=S[k]; let v=before+fx[k];
+      if(k==='van'||k==='cred') v=clamp(v,0,100);
+      if(k==='coh') v=Math.min(100,v);
+      if(k==='fans') v=Math.max(0,v);
+      S[k]=v; d[k]=Math.round(v)-Math.round(before);
+    }
+    if(fx.fatigue) S.fatigue=Math.max(0,S.fatigue+fx.fatigue);
+    if(fx.coh<0 && tag) blame[tag]=(blame[tag]||0)-fx.coh;
+    return d;
+  }
+  const bump = pct=>Math.round(Math.max(12, S.fans*pct));
+  const ev = (title,text,fx,tag)=>({kind:'event',title,text:fill(text),d:apply(fx||{},tag)});
+
+  // ---- travel ------------------------------------------------------------
+  function travel(){
+    S.stop++; const from=S.town; S.town=(S.town+1)%TOWNS.length;
+    const newLap = S.town===0; if(newLap) S.lap++;
+    const gas = Math.round((22+14*S.lap)*van.gas + 12+6*S.lap); // gas + food
+    const wear = rnd(3,8)*van.wear*(has('dale')?.75:1);
+    const fame = 1.7*Math.log10(1+S.fans/150);
+    let drain = 1.5 + .7*(avg('e')-2) + 1.1*(S.lap-1) + fame - van.comfort + S.fatigue*.12;
+    chem().forEach(c=>drain-=c.coh);
+    if(has('trevor')&&agg>=7) drain+=1.2;
+    drain=Math.max(.5,drain);
+    S.fatigue+=.5;
+    const d=apply({cash:-gas,van:-wear,coh:-drain}, fame>1.6?'success':'road');
+    return {kind:'travel',from,to:S.town,newLap,lap:S.lap,d};
+  }
+
+  // ---- road events ---------------------------------------------------------
+  const EVENTS = [
+    {id:'ferret', w:()=>has('gus')?3:.6, f:()=>ev('FERRET',`${by('drums').name} trades the spare tire for a ferret. The ferret is now in the band.`,{van:-8,coh:3},'chaos')},
+    {id:'religion', w:()=>1, f:()=>ev('TRUCK STOP REVIVAL',`${by('bass').name} finds religion at a truck stop and loses it again by the next exit.`,{coh:-3},'road')},
+    {id:'side', w:()=>1, f:()=>{by('guitar').e+=.4;return ev('FOUR STARS',`${by('guitar').name}'s side project gets a better review than this band ever has.`,{coh:-6},'ego')}},
+    {id:'pizza', w:()=>1, f:()=>ev('PAID IN PIZZA','Last night\'s promoter paid in pizza. In fairness, it was very good pizza.',{coh:3,fatigue:-1})},
+    {id:'tamb', w:()=>1, f:()=>ev('TAMBOURINE',`${pick(members.filter(m=>m.id!=='click')).name}'s new partner joins the band on tambourine. Nobody approved this.`,{coh:-5},'ego')},
+    {id:'cops', w:()=>van.id==='sprinter'?3:.5, f:()=>{
+      if(has('dale')) return ev('BLUE LIGHTS','Pulled over. {dale} produces a licence, insurance, and a calm face. The officer wishes you a good night.',{coh:2});
+      return van.id==='sprinter'
+        ? ev('BLUE LIGHTS','The cops run the plates. The plates belong to a boat. It costs a lot to make this go away.',{cash:-150,coh:-3},'van')
+        : ev('BLUE LIGHTS','Pulled over for a taillight. And the other taillight.',{cash:-60,coh:-1},'van')}},
+    {id:'zine', w:()=>1, f:()=>ev('PRESS','A photocopied zine reviews you: "Unlistenable. Essential."',{cred:8,fans:bump(.05)})},
+    {id:'clip', w:()=>1, f:()=>ev('GOING AROUND',`A clip of ${pick(members).name} falling off a stage gets passed around. People want to see it live.`,{fans:bump(.08),cred:-2})},
+    {id:'burrito', w:()=>1, f:()=>ev('GAS STATION BURRITOS','Four burritos. One bathroom. A reckoning.',{coh:-2,fatigue:3},'chaos')},
+    {id:'floor', w:()=>1, f:()=>ev('A REAL FLOOR','A fan lets the band crash at their place. There is carpet. Someone weeps.',{coh:4,fatigue:-4})},
+    {id:'theft', w:()=>van.id==='coffin'?0:1, f:()=>ev('BREAK-IN','Somebody takes a pedal board out of the van. They leave the bass. Everyone notices that.',{cash:-120,coh:-3},'money')},
+    {id:'radio', w:()=>1, f:()=>ev('3AM AIRPLAY','College radio plays you at 3am. Nine people hear it. All nine tell a friend.',{fans:bump(.04)+9,cred:3})},
+    {id:'fight', rep:true, w:()=>.5+Math.max(0,avg('e')-1.5)*.7+(S.coh<40?.8:0), f:()=>{
+      const [a,b]=two(); stats.fights++;
+      const topic=pick(['the aux cord','who finished the hummus','the setlist order','a parking spot from 2019','whether ska counts','who is "the face" of the band','a borrowed phone charger','the correct way to load the van']);
+      const calm=has('marge'); const hit=rnd(6,12)*(calm?.5:1);
+      return ev('FIST FIGHT',`${a.name} and ${b.name} come to blows over ${topic}.${calm?' {marge} ends it with a look.':''}`,{coh:-hit},'ego')}},
+    {id:'hymn', w:()=>van.id==='bus'?2.5:0, f:()=>ev('HYMNALS','A box of hymnals turns up under a seat. The singalong is sincere and deeply alarming.',{coh:5,cred:-2})},
+    {id:'door', w:()=>van.id==='coffin'?2.5:0, f:()=>ev('DOOR','The Coffin\'s rear door falls off on the interstate. You go back for it. You keep it in the van.',{van:-10,cred:3},'van')},
+    {id:'stray', w:()=>has('gus')?2.5:0, f:()=>ev('MAYOR','{gus} adopts a one-eyed dog named Mayor. Mayor has opinions about the setlist.',{coh:4,cash:-30})},
+    {id:'boot', w:()=>1, f:()=>merch>=.5
+      ? ev('BOOTLEGS','Somebody is selling bootlegs of your shirt outside the venue. You feel flattered and robbed.',{cred:4,cash:-40},'money')
+      : ev('SHIRT OFF YOUR BACK',`A kid buys the shirt ${pick(members.filter(m=>m.id!=='click')).name} is wearing. Right off them.`,{cash:20,cred:2})},
+    {id:'rain', w:()=>has('click')?2.5:0, f:()=>{S.clickWet=true;return ev('RAIN','Rain gets into {click}. Until it dries out it will only play bossa nova.',{coh:-2},'chaos')}},
+    {id:'hotel', w:()=>has('lord')?2.5:0, f:()=>ev('DEMANDS','{lord} demands a private hotel room. There is no hotel. There has never been a hotel.',{coh:-5},'ego')},
+    {id:'veg', w:()=>has('mother')?2.5:0, f:()=>ev('A VEGETABLE','{mother} makes everybody eat one vegetable. Health improves against the band\'s will.',{coh:2,fatigue:-3})},
+    {id:'taxes', w:()=>has('dale')?2:0, f:()=>ev('TAX SEASON','{dale} turns out to have been quietly filing the band\'s taxes. There is a refund.',{cash:80,coh:2})},
+    {id:'tattoo', w:()=>has('spit')?2:0, f:()=>ev('NECK TATTOO','{spit} gets a neck tattoo of a venue that has banned you for life.',{cred:5,cash:-50},'chaos')},
+    {id:'pivot', w:()=>has('brenda')?2:0, f:()=>ev('PIVOT TABLE','{brenda} presents a tour budget pivot table at a rest stop. Morale dips. Cash does not.',{cash:70,coh:-2},'road')},
+    {id:'seven', w:()=>has('trevor')?2:0, f:()=>ev('7/8','{trevor} sneaks a section in 7/8 into the opener. The pit does not know what to do with its arms.',{cred:-3,coh:-3},'ego')},
+    {id:'roof', w:()=>has('stitches')?2:0, f:()=>{by('guitar').hurt=2;return ev('STAYING SHARP','{stitches} jumps off a gas station roof "to stay sharp". Plays the next two shows in a sling.',{cred:3,coh:-1},'chaos')}},
+    {id:'ex', w:()=>has('vex')?2.5:0, f:()=>ev('AN EX','One of {vex}\'s exes turns up. With a new band. They are, unfortunately, good.',{coh:-4,fans:bump(.03)},'ego')},
+    {id:'bless', w:()=>has('marge')?2:0, f:()=>ev('BLESSING','{marge} blesses the van. It can\'t hurt. It seems to help.',{van:9})},
+    {id:'heater', w:()=>has('rat')?2:0, f:()=>ev('COAT HANGER','{rat} fixes the heater with a fork. The heater is now permanently on.',{van:10,fatigue:1})},
+    {id:'hype', w:()=>S.fans>1500?2.5:0, f:()=>ev('NEXT BIG THING','A blog calls you "the next big thing". The van gets very, very quiet.',{coh:-7,fans:bump(.05)},'success')},
+    {id:'pod', w:()=>S.fans>500?2:0, f:()=>ev('"MY BAND"',`${top('e').name} does a podcast interview alone and says "my band" eleven times.`,{coh:-6,fans:bump(.03)},'success')},
+    {id:'exit', w:()=>1, f:()=>ev('WRONG EXIT','Ninety extra miles. Nobody will admit who was holding the map.',{cash:-25,coh:-3,van:-4},'road')},
+    {id:'wash', w:()=>1, f:()=>ev('LAUNDRY DAY','Laundry day. Everybody smells like a person again.',{coh:5,cash:-15})}
+  ];
+  function randomEvent(){
+    const pool=EVENTS.filter(e=>(e.rep||!used[e.id])&&e.w()>0);
+    let tot=pool.reduce((a,e)=>a+e.w(),0), r=R()*tot;
+    for(const e of pool){r-=e.w(); if(r<=0){used[e.id]=1;return e.f()}}
+    return pool[0].f();
+  }
+
+  // ---- dilemmas (two per tour) --------------------------------------------
+  const DILEMMAS = {
+    suit:()=>({title:'A SUIT APPEARS',text:'A man in very clean boots offers $700 to play a "brand showcase" for a vape company.',opts:[
+      {label:'Take the money',hint:'+$700. People will talk.',f:()=>({text:'You play under a vinyl banner. The cheque clears. The scene remembers.',fx:{cash:700,cred:-22,coh:-4},tag:'money'})},
+      {label:'Tell him to eat it',wild:1,hint:'Costs nothing. Feels great.',f:()=>({text:`${top('c').name} tells him exactly where to put the vape. Morale soars.`,fx:{cred:12,coh:5}})}]}),
+    kick:()=>{
+      const cand=members.filter(m=>m.id!=='teen').slice().sort((a,b)=>(b.c+b.e-b.t)-(a.c+a.e-a.t));
+      const target=cand[0], acc=pick(members.filter(m=>m!==target&&m.id!=='click'));
+      return {title:'BAND MEETING',text:`${acc.name} wants ${target.name} out of the band. Tonight. In this parking lot.`,opts:[
+        {label:`Kick ${target.name} out`,wild:1,hint:'A local kid says they know the songs.',f:()=>{
+          stats.kicked=target.name; const i=members.indexOf(target);
+          members[i]={id:'teen',name:'Some Kid',t:2,c:2,e:1,s:5,cost:0,role:target.role,hurt:0};
+          return {text:`You leave ${target.name} at a rest stop with $20. A local kid gets in the van and does not ask questions.`,fx:{coh:14}}}},
+        {label:'Group hug',hint:'Nobody leaves. Nobody is happy.',f:()=>({text:'Nobody is kicked out. Nobody is satisfied. The hug lasts too long.',fx:{coh:-7},tag:'ego'})}]}},
+    noise:()=>({title:'THE NOISE',text:`${VThe} has started making The Noise.`,opts:[
+      {label:'Fix it now ($220)',hint:'A real mechanic. Real money.',f:()=>({text:'A mechanic removes something that was never supposed to be in an engine.',fx:{cash:-220,van:35}})},
+      {label:'Turn the radio up',wild:1,hint:'Free. Probably fine.',f:()=>chance(.5)?{text:'The Noise stops on its own. Nobody mentions it again.',fx:{coh:2}}:{text:'The Noise becomes The Smell.',fx:{van:-35,coh:-2},tag:'van'}}]}),
+    second:()=>({title:'ONE MORE SET',text:'A promoter offers a second show tonight: a house party, paid in "exposure".',opts:[
+      {label:'Play it',wild:1,hint:'New fans. No sleep.',f:()=>({text:'You play a kitchen at 2am. The fridge gets a pit. Everyone films it.',fx:{fans:bump(.12)+15,coh:-5,fatigue:4},tag:'road'})},
+      {label:'Go to sleep',hint:'Rest is punk now.',f:()=>({text:'Eight hours. Horizontal. The band is almost pleasant by morning.',fx:{coh:4,fatigue:-5}})}]}),
+    dayoff:()=>({title:'DAY OFF',text:'A whole day with no show. Half the band wants to record a demo. Half wants the water park.',opts:[
+      {label:'Record a demo ($150)',hint:'Something to hand people.',f:()=>({text:'Four songs in a garage, one take each. People actually pass it around.',fx:{cash:-150,fans:bump(.1)+10,cred:6}})},
+      {label:'Water park ($60)',wild:1,hint:'Morale. Chlorine.',f:()=>({text:'The lazy river heals what years of therapy could not.',fx:{cash:-60,coh:12,fatigue:-2}})}]}),
+    opener:()=>({title:'THE BIG SLOT',text:'A much bigger band offers you an opening slot tomorrow. Four hundred miles in the wrong direction.',opts:[
+      {label:'Drive all night',wild:1,hint:'Huge crowd. Brutal drive.',f:()=>({text:'You play to more people than every other show combined. Nobody has slept.',fx:{fans:bump(.2)+35,van:-15,cash:-90,coh:-3,fatigue:4},tag:'road'})},
+      {label:'Stick to the plan',hint:'The plan is fine.',f:()=>({text:'You stay on the route. Somebody mutters "could have been us" for a week.',fx:{coh:2}})}]}),
+    diner:()=>({title:'3AM DINER SUMMIT',text:'Nobody has spoken in two hundred miles. Somebody pulls into an all-night diner.',opts:[
+      {label:'Air it all out',wild:1,hint:'Could fix everything. Could not.',f:()=>chance(.5)?{text:'Things are said. Things are forgiven. The waitress claps.',fx:{coh:20}}:{text:'Things are said. They cannot be unsaid. The waitress leaves.',fx:{coh:-10},tag:'ego'}},
+      {label:'Buy pancakes, say nothing ($70)',hint:'Syrup is a kind of apology.',f:()=>({text:'Nobody talks. Everybody eats. It helps more than it should.',fx:{cash:-70,coh:8}})}]})
+  };
+  function dilemmaDue(){
+    if(dil.done===0) return S.stop>=dil.first;
+    if(dil.done===1) return S.stop>dil.first+2 && (S.coh<35 || S.stop>=dil.second);
+    return false;
+  }
+  function nextDilemma(){
+    let id;
+    if(dil.done===1 && S.coh<35) id='diner';
+    else { const ids=Object.keys(DILEMMAS).filter(k=>k!=='diner'&&!dil.seen[k]); id=pick(ids); }
+    dil.seen[id]=1; dil.done++;
+    return DILEMMAS[id]();
+  }
+  function resolve(dm, i){
+    const o=dm.opts[i], r=o.f();
+    return {kind:'event',title:dm.title,text:fill(r.text),d:apply(r.fx,r.tag),choice:fill(o.label)};
+  }
+
+  // ---- the stretch of road between towns -----------------------------------
+  function road(){
+    const town=TOWNS[S.town].name;
+    if(S.van<=0){
+      const cost=has('rat')?120:300;
+      if(S.cash<cost && !S.pawned){ S.pawned=true; stats.breakdowns++;
+        return ev('PAWN SHOP',`${VThe} dies outside ${town} and nobody can pay for it. You pawn the good amp and the bad amp. It gets you rolling.`,{van:45-S.van,coh:-10,cred:3},'money'); }
+      if(S.cash>=cost){ stats.breakdowns++; const up=55-S.van;
+        return ev('THE VAN DIES',`${VThe} dies outside ${town}. ${has('rat')?'{rat} rebuilds it overnight with parts from a lawnmower.':'A mechanic named Lyle raises it from the dead.'}`,{cash:-cost,van:up,coh:-6},'van'); }
+      S.over=true; S.end={reason:'stranded'}; return null;
+    }
+    if(S.cash<0){
+      return ev('FLAT BROKE','Out of money. You siphon gas from a boat dealership and busk outside a pharmacy until you have enough to leave.',{cash:-S.cash+10,coh:-6,cred:2,fatigue:2},'money');
+    }
+    if(dilemmaDue()){
+      const dm=nextDilemma();
+      if(cfg.manual){ dil.pending=dm; return {kind:'choice',title:dm.title,text:fill(dm.text),opts:dm.opts.map(o=>({label:fill(o.label),hint:o.hint}))}; }
+      const pWild=clamp(.2+.11*avg('c'),.2,.8);
+      const i=dm.opts.findIndex(o=>chance(pWild)?o.wild:!o.wild);
+      const b=resolve(dm,i<0?0:i);
+      b.text=`${fill(dm.text)} The band votes: "${b.choice}". ${b.text}`;
+      return b;
+    }
+    if(chance(van.bd*(1+(100-S.van)/60))){
+      stats.breakdowns++;
+      const cost=Math.round(rnd(70,180)*(has('rat')?.4:1));
+      const what=pick(['The alternator quits','A tire explodes','The radiator boils over','Something falls off and you drive over it','The fuel pump gives up','The exhaust drags for six miles, then leaves']);
+      return ev('BREAKDOWN',`${what} near ${town}. ${has('rat')?'{rat} fixes it with a coat hanger and spite.':'Four hours on the shoulder.'}`,{cash:-cost,van:-rnd(10,22),coh:-4},'van');
+    }
+    const motel=70+50*S.lap;
+    if(S.cash>=motel+150 && S.coh<50 && S.stop-S.lastMotel>=4 && chance(.8)){ S.lastMotel=S.stop;
+      return ev('MOTEL NIGHT','You spring for a motel. Real beds. One each. A door that locks.',{cash:-motel,coh:8,fatigue:-4}); }
+    if(S.cash>=650 && stats.gigs>=3 && S.stop-S.lastPress>=3 && chance(.7)){ S.lastPress=S.stop;
+      return ev('SEVEN-INCH','There is finally enough cash to press a 7-inch. Three songs, four minutes, one crooked sleeve. It travels further than the van does.',{cash:-350,fans:bump(.12)+25,cred:3}); }
+    if(S.cash>=400 && S.van<45 && chance(.8))
+      return ev('TUNE-UP','You can finally afford a real mechanic. He asks what happened. Nobody knows where to start.',{cash:-220,van:35});
+    if(chance(.42+.07*avg('c')+(chemOn('rat','gus')?.1:0))) return randomEvent();
+    return null;
+  }
+
+  // ---- gigs -----------------------------------------------------------------
+  const GIG_TEXT = {
+    disaster:['Played to the bartender and a dog. The dog left.','The PA caught fire, and not in the cool way.','Double-booked with a baby shower. The baby shower won.','{M} forgot every song, including the cover.'],
+    bad:['Eleven people, arms folded, standing a full six feet back.','The sound guy mixed you like a podcast.','Somebody in the crowd requested a different band.','The only applause was for the end.'],
+    ok:['Solid set. Somebody bought a shirt on purpose.','A real pit forms. Four people, but committed.','The opener\'s mom said you were "very loud". It was a compliment.','Nobody left. For this room, that\'s a rave review.'],
+    good:['The room goes off. Sweat drips from the ceiling.','The crowd knows a chorus. Nobody knows how.','Someone crowd-surfs under a seven-foot ceiling.','They make you play the fast one twice.'],
+    legendary:['The pit swallows the stage. Nobody can find the drums.','The floor drops two inches. Everyone agrees it was worth it.','The cops arrive, stay for three songs, and buy a shirt.','People will lie about having been at this one.']
+  };
+  const TIER_LABEL = {disaster:'DISASTER',bad:'ROUGH',ok:'DECENT',good:'KILLER',legendary:'LEGENDARY'};
+  function gig(){
+    const town=TOWNS[S.town];
+    if(S.fatigue>12){
+      S.fatigue=4;
+      return Object.assign(ev('VAN FLU',`Everybody has the van flu. The ${town.name} show is cancelled. The band lies very still.`,{coh:-3},'road'),{skip:true});
+    }
+    stats.gigs++;
+    const cap=Math.round(town.cap*1.3*Math.pow(2,S.lap-1));
+    let draw=4+cap*rnd(.12,.4)*(.5+S.cred/100)+S.fans*.22;
+    if(has('vex')) draw*=1.1;
+    const att=Math.max(2,Math.round(Math.min(cap,draw)));
+    const fit=1-Math.abs(agg-town.t)/9;
+    const hurt=members.filter(m=>m.hurt>0);
+    let q=.16+.11*avg('t')+.28*fit+rnd(-1,1)*(.11+.02*avg('c')+.008*agg)-S.fatigue*.015-hurt.length*.08;
+    if(has('mother')) q+=.04;
+    if(chemOn('lord','mother')) q+=.04;
+    if(has('trevor')&&agg<=4) q+=.05;
+    if(S.clickWet&&has('click')){q-=.2;S.clickWet=false}
+    const tier=q<.4?'disaster':q<.58?'bad':q<.8?'ok':q<.98?'good':'legendary';
+    const qq=clamp(q,.05,1.4);
+    let gain=att*.9*Math.pow(qq,1.6)+S.fans*.07*Math.pow(qq,1.5)*(S.cred/50);
+    if(has('spit')) gain*=1.1;
+    if(has('lord')) gain*=1.15;
+    if(has('stitches')&&agg>=6) gain*=1.15;
+    if(chemOn('spit','vex')) gain*=1.1;
+    if(tier==='legendary') gain*=1.8;
+    const crowd=Math.pow(att,.6);
+    let door=13*crowd*(tier==='disaster'?.3:1);
+    let merchCash=crowd*(1+15*merch)*(.5+qq*.6)*(has('brenda')?1.25:1)*(chemOn('brenda','click')?1.1:1);
+    let coh={disaster:-5,bad:-2,ok:0,good:1.5,legendary:3}[tier];
+    let cred=(agg-5)*.5+(tier==='legendary'?5:tier==='disaster'?-2:0);
+    if(merch>.6) cred-=(merch-.6)*2.5;
+    if(has('click')) cred-=.6;
+    let line=pick(GIG_TEXT[tier]).replace('{M}',pick(members).name), extra='';
+    if(agg-town.t>=4 && chance(.28)){
+      door=0; gain*=.6; cred+=5;
+      extra=' The owner pulls the plug during song two. You finish it unplugged, screaming. No pay.';
+    } else if(has('spit')&&!has('marge')&&chance(.12)){
+      door=0; cred+=4; coh-=3;
+      extra=' {spit} fights the sound guy. The door money goes to the sound guy.';
+    }
+    if(agg>=7){
+      const st=has('stitches');
+      if(chance((agg-6)*.035*(st?2:1))){
+        const m=st?by('guitar'):pick(members.filter(x=>x.id!=='click'));
+        if(m&&m.hurt<=0){m.hurt=3; extra+=` ${m.name} breaks a finger on somebody's face.`;}
+      }
+    }
+    if(tier==='good'||tier==='legendary'){const m=top('t'); m.e+=m.id==='lord'?.3:.13;}
+    members.forEach(m=>{if(m.hurt>0)m.hurt--});
+    S.fatigue+=1.2*(6-avg('s'))/3*(chemOn('brenda','click')?.7:1)+agg*.05;
+    gain=Math.round(gain);
+    const d=apply({fans:gain,cash:Math.round(door+merchCash),coh,cred},'gig');
+    extra=fill(extra);
+    const rec={town:town.name,venue:town.venue,fans:gain,att,cap,line,tier};
+    if(!stats.best||gain>stats.best.fans) stats.best=rec;
+    if(!stats.worst||q<stats.worst.q) stats.worst=Object.assign({q},rec);
+    return {kind:'gig',town:town.name,venue:town.venue,att,cap,tier,label:TIER_LABEL[tier],q,text:line+extra,d};
+  }
+
+  // ---- endings ----------------------------------------------------------------
+  function cause(){
+    const town=TOWNS[S.town].name;
+    if(S.end&&S.end.reason==='stranded') return pick([
+      `Stranded in ${town} with a dead van and no money. ${VThe} is now a planter.`,
+      `${VThe} died in ${town}. Nobody could afford to bring it back. Everyone took the bus home, separately.`]);
+    const spec=[];
+    if(has('dale')) spec.push('{dale} got a real job. {dale} had the licence.');
+    if(has('mother')) spec.push('{mother} went home. Said it was a school night somewhere.');
+    if(has('click')) spec.push('{click} got wet one last time. There was no funeral.');
+    if(has('lord')) spec.push('{lord} ascended. (Went solo.)');
+    if(has('gus')) spec.push('{gus} chose the animals. There were fourteen by then.');
+    if(has('brenda')) spec.push('{brenda} ran the numbers and resigned, with two weeks\' notice.');
+    if(has('teen')) spec.push('Some Kid\'s mom came and picked them up.');
+    if(spec.length&&chance(.35)) return pick(spec);
+    const tag=Object.keys(blame).sort((a,b)=>blame[b]-blame[a])[0]||'road';
+    const P={
+      ego:[`${top('e').name} went solo. The solo record is about the rest of you.`,'Creative differences (a chair).','An argument over whose name goes biggest on the flyer. There was one flyer.'],
+      van:['Eleven hours on a highway shoulder will end anything.',`${VThe} broke the band before the band could break it.`],
+      money:['You split the last four dollars four ways. Nobody felt good about it.','Irreconcilable financial differences ($38).'],
+      chaos:[`${top('c').name} traded the band's future for something in a parking lot.`,'Too many incidents. A lawyer would call it "a pattern".'],
+      road:['Nobody could face one more gas station burrito.','Everybody simply went home, and nobody brought it up again.'],
+      success:['Ruined by success: a label offered a deal to exactly one of you.','People started liking you. The band could not survive it.',`Fame went straight to ${top('e').name}'s head. It was a short trip.`],
+      gig:['One bad show too many. Somebody believed the heckler.','The band broke up on stage, mid-song, to light applause.']
+    };
+    return pick(P[tag]||P.road);
+  }
+  function endBeat(){
+    S.over=true; if(!S.end) S.end={reason:'breakup'};
+    S.end.cause=fill(cause()); S.end.town=TOWNS[S.town].name;
+    return {kind:'end',reason:S.end.reason,cause:S.end.cause,town:S.end.town};
+  }
+
+  // ---- beat machine -----------------------------------------------------------
+  function next(){
+    if(S.done) return null;
+    if(S.over||S.coh<=0||S.stop>=80){ S.done=true; return endBeat(); }
+    if(S.phase==='travel'){ S.phase='road'; return travel(); }
+    if(S.phase==='road'){
+      S.phase='gig';
+      const b=road();
+      if(S.over){ S.done=true; return endBeat(); }
+      if(b) return b;
+    }
+    S.phase='travel';
+    return gig();
+  }
+  function choose(i){ const dm=dil.pending; dil.pending=null; return resolve(dm,i); }
+  return {S, stats, members, van, next, choose, chem, rank:()=>rankFor(Math.round(S.fans))};
+}
+/*ENGINE-END*/
+
+// ---------------------------------------------------------------------------
+// UI
+// ---------------------------------------------------------------------------
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v=localStorage.getItem('pits.'+k); return v==null?d:JSON.parse(v) }catch(e){ return d } },
+  set(k, v){ try{ localStorage.setItem('pits.'+k, JSON.stringify(v)) }catch(e){} }
+};
+const money = n => (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString();
+
+// ---- title ---------------------------------------------------------------
+(function(){
+  const cls=['a','c','b','sp','d','a','b','c'];
+  $('title').innerHTML=[...'THE PITS'].map((ch,i)=>ch===' '?'<span class="sp"></span>':`<span class="${cls[i]}">${ch}</span>`).join('');
+})();
+
+// ---- setup state -----------------------------------------------------------
+const NAME_A=['Septic','Rabid','Infected','Unwashed','Court-Ordered','Lukewarm','Feral','Embalmed','Moist','Expired','Evicted','Uninsured','Sticky','Rancid','Divorced','Haunted','Recalled','Discount','Damp','Excommunicated','Horny','Chafed','Engorged','Lubed','Unshowered','Crusty'];
+const NAME_N=['Scabs','Enemas','Landlords','Dentists','Nuns','Corpses','Possums','Urinals','Rashes','Interns','Uncles','Hemorrhoids','Maggots','Parolees','Stains','Lawsuits','Receipts','Gravy','Polyps','Deacons','Taints','Merkins','Swingers','Proctologists'];
+const NAME_X=["Septic Prom","Grandma's Ashes","Open Casket Potluck","Toilet Baptism","Dead Mall Santa","Wet Funeral","Clown Autopsy","Hospice Rave","Mom's Parole Hearing","Pope on a Rope","Nun Punt","Bong Water Baptism","Scab Buffet","Open Mic Exorcism","Hobo Dentistry","Mass Grave Bake Sale","Divorced Dads of Satan","Puke Ellington","The Colostomy Bags","Roadkill Casserole","Pap Smear Campaign","Crotch Rot","Urine Trouble","Dumpster Christening","Trailer Park Messiah","Bail Money","Funeral Selfie","Satan's Timeshare","Dead Pets Society","Lice Capades","Mullet Autopsy","Stab Wound Stan & the Sutures","The Tetanus Shots","Sewer Communion","God's Restraining Order","Piss Wedding","Yeast Confession","Tapeworm Honeymoon","Free Vasectomies","Jesus Wept (Blood)","Shart Attack","Baby's First Tetanus","Coroner's Day Off","Organ Donor Prom Night","Unholy Hand Job","Fisting for Jesus","Pegging the Pope","Glory Hole Gospel Hour","Papal Bulge","Smegma Carta","Scrotal Recall","Taint Misbehavin'","The Queefs","Butt Plug Bake Sale","Dildo Funeral","Lube Baptism","Jizz Cathedral","Sweaty Confessional","Santa's Prostate","Grandpa's Browser History","Colonoscopy Selfie","Nipple Clamp Communion","Gonorrhea Christmas","Chlamydia Clinic Mixer","Cum Laude Dropouts","Dry Hump Day","Communion Wafer Thong","Motorboat the Abbess","Vasectomy Reversal Party","Clergy Orgy","Rimjob Reformation","Moist Deacon","Herpes Duplex","Erectile Disfunction Junction","Satan's Taint","Prolapse Yoga","Menage a Twat","Circle of Jerks Anonymous","Tramp Stamp Collectors"];
+const one=a=>a[Math.random()*a.length|0];
+const randName=()=>Math.random()<.55?one(NAME_X):(Math.random()<.6?'The ':'')+one(NAME_A)+' '+one(NAME_N);
+const DEFAULT={lineup:{vocals:'brenda',guitar:'rat',bass:'dale',drums:'gus'},van:'coffin',agg:6,merch:300,manual:false,name:''};
+let cfg=Object.assign({},DEFAULT,store.get('cfg',{}));
+cfg.lineup=Object.assign({},DEFAULT.lineup,cfg.lineup);
+if(!cfg.name) cfg.name=randName();
+const AGG_LAB=['','Radio-friendly','Dad-approved','Polite','Peppy','Scrappy','Loud','Feral','Hostile','Unlistenable','Noise complaint'];
+const pips=(n,max=5)=>'■'.repeat(Math.round(n))+'□'.repeat(max-Math.round(n));
+
+function renderSetup(){
+  $('lineup').innerHTML=ROLES.map(r=>{
+    const sel=CAST[r].find(m=>m.id===cfg.lineup[r]);
+    return `<div class="role">${r}</div><div class="row">`+CAST[r].map(m=>
+      `<button class="card${m===sel?' on':''}" data-role="${r}" data-id="${m.id}"><b>${m.name}</b><span class="cost">${m.cost?money(m.cost):'FREE'}</span>
+       <div class="st"><em>TAL</em>${pips(m.t)}</div><div class="st"><em>CHA</em>${pips(m.c)}</div><div class="st"><em>EGO</em>${pips(m.e)}</div><div class="st"><em>STA</em>${pips(m.s)}</div></button>`).join('')
+      +`</div><p class="blurb">${sel.blurb}</p>`;
+  }).join('');
+  $('vans').innerHTML=VANS.map(v=>`<button class="card${v.id===cfg.van?' on':''}" data-van="${v.id}"><b>${v.name}</b><span class="cost">${v.cost?money(v.cost):'FREE'}</span>
+     <div class="st"><em>RUN</em>${pips(v.rel)}</div><div class="st"><em>ROOM</em> ${pips(v.cmf)}</div></button>`).join('');
+  $('vanBlurb').textContent=VANS.find(v=>v.id===cfg.van).blurb;
+  $('agg').value=cfg.agg; $('aggVal').textContent=cfg.agg+'/10';
+  $('aggNote').textContent=AGG_LAB[cfg.agg]+(cfg.agg>=8?'. Basements love it. Ballrooms pull the plug.':cfg.agg<=3?'. Coffee shops love it. Your cred will not.':'. Works in most rooms. Amazes none.');
+  $('merch').value=cfg.merch; $('merchVal').textContent=money(cfg.merch);
+  const m=cfg.merch;
+  $('merchNote').textContent=m===0?'Nothing. Art is not for sale. Neither is gas.':m<=150?'Sharpie on thrift-store shirts.':m<=350?'Stickers and one suspicious-looking tee.':m<=600?'Real screen-printed shirts.':m<=800?'Shirts, patches, a tote bag.':'A full merch table. The scene calls you sellouts.';
+  document.querySelectorAll('#modes .card').forEach(b=>b.classList.toggle('on',(b.dataset.mode==='manual')===!!cfg.manual));
+  const left=BUDGET-setupCost(cfg);
+  $('left').textContent=money(left);
+  $('money').classList.toggle('over',left<0);
+  $('go').disabled=left<0;
+  $('go').textContent=left<0?'OVER BUDGET':'START THE TOUR';
+  const ba=store.get('best.auto',0), bm=store.get('best.manual',0);
+  $('bestLine').textContent=(ba||bm)?`Best tours: ${ba.toLocaleString()} fans hands-off / ${bm.toLocaleString()} as manager`:'$2,000 of grandma\'s money. Whatever you don\'t spend is gas money.';
+  const hall=store.get('hall',[]), hl=$('hallList'); $('hall').hidden=!hall.length; hl.innerHTML='';
+  for(const h of hall){ const li=document.createElement('li'), b=document.createElement('b'), sp=document.createElement('span');
+    b.textContent=`${h.fans.toLocaleString()} \u00b7 ${h.name}`; sp.textContent=` ${h.rank}, ${h.mode==='manual'?'manager':'hands off'}, ${h.gigs} gigs. ${h.cause}`; li.append(b,sp); hl.append(li); }
+  store.set('cfg',cfg);
+}
+$('setup').addEventListener('click',e=>{
+  const c=e.target.closest('.card'); if(!c) return;
+  if(c.dataset.role) cfg.lineup[c.dataset.role]=c.dataset.id;
+  else if(c.dataset.van) cfg.van=c.dataset.van;
+  else if(c.dataset.mode) cfg.manual=c.dataset.mode==='manual';
+  blip(); renderSetup();
+});
+$('agg').addEventListener('input',e=>{cfg.agg=+e.target.value;renderSetup()});
+$('merch').addEventListener('input',e=>{cfg.merch=+e.target.value;renderSetup()});
+$('bname').value=cfg.name;
+$('bname').addEventListener('input',e=>{cfg.name=e.target.value;store.set('cfg',cfg)});
+$('reroll').addEventListener('click',()=>{cfg.name=randName();$('bname').value=cfg.name;store.set('cfg',cfg);blip()});
+$('wipe').addEventListener('click',()=>{ if(confirm('Wipe every saved tour and best score?')){ store.set('hall',[]); store.set('best.auto',0); store.set('best.manual',0); renderSetup(); } });
+$('recast').addEventListener('click',()=>{rollNames();blip();renderSetup()});
+$('go').addEventListener('click',()=>startTour());
+
+// ---- sound -------------------------------------------------------------------
+let AC=null, soundOn=store.get('sound',true), dist=null;
+function audio(){
+  if(!soundOn) return null;
+  if(!AC){ try{
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    dist=AC.createWaveShaper(); const c=new Float32Array(256);
+    for(let i=0;i<256;i++){const x=i/128-1;c[i]=Math.tanh(x*6)}
+    dist.curve=c; const g=AC.createGain(); g.gain.value=.16; dist.connect(g); g.connect(AC.destination);
+  }catch(e){ soundOn=false; return null } }
+  if(AC.state==='suspended') AC.resume();
+  return AC;
+}
+function tone(f,t0,dur,type='sawtooth',vol=.5){
+  const a=audio(); if(!a) return;
+  const o=a.createOscillator(), g=a.createGain(); o.type=type; o.frequency.setValueAtTime(f,a.currentTime+t0);
+  g.gain.setValueAtTime(vol,a.currentTime+t0); g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+dur);
+  o.connect(g); g.connect(dist); o.start(a.currentTime+t0); o.stop(a.currentTime+t0+dur+.02); return o;
+}
+const chord=(root,t0,dur)=>{tone(root,t0,dur);tone(root*1.5,t0,dur);tone(root*2,t0,dur,'square',.25)};
+let noiseBuf=null;
+function drum(kind,t0){
+  const a=audio(); if(!a) return;
+  const t=a.currentTime+t0;
+  if(kind==='kick'){ const o=a.createOscillator(), g=a.createGain(); o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(40,t+.12);
+    g.gain.setValueAtTime(1,t); g.gain.exponentialRampToValueAtTime(.001,t+.16); o.connect(g); g.connect(dist); o.start(t); o.stop(t+.18); return; }
+  if(!noiseBuf){ noiseBuf=a.createBuffer(1,a.sampleRate*.3,a.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; }
+  const n=a.createBufferSource(), f=a.createBiquadFilter(), g=a.createGain(); n.buffer=noiseBuf;
+  f.type=kind==='hat'?'highpass':'bandpass'; f.frequency.value=kind==='hat'?7000:1800;
+  const len=kind==='hat'?.04:.13; g.gain.setValueAtTime(kind==='hat'?.25:.7,t); g.gain.exponentialRampToValueAtTime(.001,t+len);
+  n.connect(f); f.connect(g); g.connect(dist); n.start(t); n.stop(t+len+.02);
+}
+const E=82.4, RIFFS=[[0,0,5,3,0,7,5,3],[0,0,0,3,5,5,3,0],[0,3,5,0,3,6,5,3],[0,0,7,7,5,5,3,2],[0,5,0,7,0,5,3,3],[0,0,3,0,5,0,6,5]];
+let lastRiff=-1;
+// two bars of power chords over a d-beat; faster the more aggressive the setlist
+function riff(agg=6, bars=2){
+  if(!audio()) return;
+  let i; do{ i=Math.random()*RIFFS.length|0 }while(i===lastRiff); lastRiff=i;
+  const pat=RIFFS[i], step=.2-agg*.009, key=E*Math.pow(2,(Math.random()*4|0)/12);
+  for(let b=0;b<bars;b++) pat.forEach((semi,n)=>{
+    const t=(b*pat.length+n)*step;
+    chord(key*Math.pow(2,semi/12),t,step*.92);
+    drum(n%2?'snare':'kick',t); drum('hat',t); drum('hat',t+step/2);
+    if(agg>=7&&n%2===0) drum('kick',t+step/2);
+  });
+}
+function blip(){ tone(660,0,.05,'square',.2) }
+function thud(){ tone(110,0,.25); tone(70,.08,.3); drum('kick',0) }
+function sting(good){ good?[196,247,294,392].forEach((f,i)=>{chord(f,i*.09,.2);drum('snare',i*.09)}):[196,185,147,98].forEach((f,i)=>chord(f,i*.12,.22)) }
+function dirge(){ [147,139,131,98,73].forEach((f,i)=>{chord(f,i*.3,.5);drum('kick',i*.3)}) }
+
+// Optional recorded clips. Drop files in assets/audio/ (see the README there);
+// anything missing falls back to the synth above.
+const CLIP={gig:[],drive:null,good:null,bad:null,end:null};
+function probe(name){
+  return new Promise(res=>{
+    const tryExt=exts=>{ if(!exts.length) return res(null);
+      const a=new Audio(); let done=false; const fin=v=>{ if(!done){done=true; v?res(a):tryExt(exts.slice(1))} };
+      a.preload='auto'; a.addEventListener('canplaythrough',()=>fin(true),{once:true}); a.addEventListener('error',()=>fin(false),{once:true});
+      setTimeout(()=>fin(false),6000); a.src='assets/audio/'+name+'.'+exts[0]; a.load(); };
+    tryExt(['mp3','wav']);
+  });
+}
+async function loadClips(){
+  if(!/^(https?|file):$/.test(location.protocol)) return;
+  for(const k of ['drive','good','bad','end']) probe(k).then(a=>CLIP[k]=a);
+  for(let i=1;i<=8;i++){ const a=await probe('gig-'+i); if(!a) break; CLIP.gig.push(a); }
+}
+loadClips();
+let playing=new Set(), lastGig=null;
+function playClip(a,vol=1,loop=false){
+  if(!a||!soundOn) return null;
+  clearInterval(a._fade); a.loop=loop; a.volume=vol; try{ a.currentTime=0 }catch(e){}
+  const p=a.play(); if(p) p.catch(()=>{}); playing.add(a); return a;
+}
+function fadeClip(a,ms=350){
+  if(!a) return; clearInterval(a._fade); const v0=a.volume, t0=performance.now();
+  a._fade=setInterval(()=>{ const k=(performance.now()-t0)/ms; if(k>=1){ clearInterval(a._fade); a.pause(); playing.delete(a) } else a.volume=v0*(1-k) },30);
+}
+function stopClips(){ for(const a of [...playing]){ clearInterval(a._fade); a.pause(); playing.delete(a) } }
+function gigMusic(agg){
+  if(CLIP.gig.length){ let a; do{ a=CLIP.gig[Math.random()*CLIP.gig.length|0] }while(CLIP.gig.length>1&&a===lastGig); lastGig=a; return playClip(a,.9); }
+  riff(agg); return null;
+}
+function driveMusic(on){ const a=CLIP.drive; if(!a) return; if(on){ if(a.paused) playClip(a,.3,true) } else if(!a.paused) fadeClip(a,250); }
+
+// ---- game clock (respects speed) ---------------------------------------------
+let clock=0, speed=1, waiters=[], lastT=0, running=false, runId=0;
+function wait(ms){ return new Promise(res=>waiters.push({at:clock+ms,res})) }
+function frame(t){
+  const dt=Math.min(100,t-lastT||16); lastT=t;
+  if(running){
+    clock+=dt*speed;
+    for(let i=waiters.length-1;i>=0;i--) if(waiters[i].at<=clock){ const w=waiters.splice(i,1)[0]; w.res(); }
+    draw();
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---- canvas ---------------------------------------------------------------------
+const cv=$('cv'), ctx=cv.getContext('2d');
+let W=300,H=200;
+function fit(){ const r=cv.getBoundingClientRect(), d=Math.min(2.5,window.devicePixelRatio||1); W=r.width;H=r.height; cv.width=W*d;cv.height=H*d; ctx.setTransform(d,0,0,d,0,0); }
+window.addEventListener('resize',()=>{if(running)fit()});
+const INK='#141210', PINK='#ff2e7e', PAPER='#ebe6d6';
+const BEND=[.16,-.12,.14,-.1,.15,-.13,.1,-.16];
+let G=null, scene='map', trav=null, gigAnim=null, puffs=[];
+function seg(i){ // curved road from town i to i+1
+  const a=TOWNS[i], b=TOWNS[(i+1)%TOWNS.length];
+  const ax=a.x*W, ay=a.y*H, bx=b.x*W, by=b.y*H, mx=(ax+bx)/2, my=(ay+by)/2, k=BEND[i];
+  return {ax,ay,bx,by,cx:mx-(by-ay)*k,cy:my+(bx-ax)*k};
+}
+function bez(s,t){ const u=1-t; return {x:u*u*s.ax+2*u*t*s.cx+t*t*s.bx, y:u*u*s.ay+2*u*t*s.cy+t*t*s.by} }
+function drawVan(x,y,dir,moving){
+  const id=G.van.id, j=moving?Math.sin(clock/55)*1.3:0;
+  ctx.save(); ctx.translate(x,y-9+j); ctx.scale(dir,1);
+  ctx.lineWidth=2; ctx.strokeStyle=INK;
+  ctx.fillStyle=id==='coffin'?INK:id==='bus'?'#f7f3e6':'#9b978c';
+  ctx.beginPath();
+  if(id==='coffin'){ ctx.moveTo(-17,6);ctx.lineTo(-17,-5);ctx.lineTo(4,-6);ctx.lineTo(10,-1);ctx.lineTo(17,0);ctx.lineTo(17,6); }
+  else if(id==='bus'){ ctx.rect(-19,-8,36,14); }
+  else { ctx.moveTo(-17,6);ctx.lineTo(-17,-8);ctx.lineTo(8,-8);ctx.lineTo(16,-1);ctx.lineTo(16,6); }
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=id==='coffin'?PINK:INK;
+  if(id==='bus'){ for(let i=0;i<4;i++)ctx.fillRect(-16+i*8,-5,5,4); ctx.fillStyle=PINK; ctx.fillRect(-2,2,6,2); }
+  else ctx.fillRect(6,-4,5,3);
+  ctx.fillStyle=INK; for(const wx of[-10,10]){ctx.beginPath();ctx.arc(wx,7,4,0,7);ctx.fill();ctx.fillStyle=PAPER;ctx.beginPath();ctx.arc(wx,7,1.5,0,7);ctx.fill();ctx.fillStyle=INK}
+  ctx.restore();
+}
+function drawMap(){
+  const n=TOWNS.length, fs=Math.max(9,Math.min(11.5,W/32));
+  // roads
+  for(let i=0;i<n;i++){
+    const s=seg(i);
+    ctx.setLineDash([7,5]); ctx.lineWidth=2.5; ctx.strokeStyle='rgba(20,18,16,.55)';
+    ctx.beginPath(); ctx.moveTo(s.ax,s.ay); ctx.quadraticCurveTo(s.cx,s.cy,s.bx,s.by); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  // doodles
+  ctx.save(); ctx.translate(W*.5,H*.5); ctx.rotate(-.08); ctx.textAlign='center';
+  ctx.font=`900 ${Math.min(30,W/11)}px Impact,"Arial Black",sans-serif`; ctx.fillStyle='rgba(20,18,16,.10)';
+  ctx.fillText(G.S.lap===1?'TOUR 1: DIVES':'LAP '+G.S.lap+': BIGGER ROOMS',0,0);
+  ctx.font=`${fs}px "Courier New",monospace`; ctx.fillStyle='rgba(20,18,16,.3)'; ctx.fillText('(here be cops)',0,18); ctx.restore();
+  // towns
+  ctx.font=`700 ${fs}px "Courier New",monospace`;
+  TOWNS.forEach((t,i)=>{
+    const x=t.x*W,y=t.y*H, here=i===G.S.town&&!trav;
+    ctx.lineWidth=3; ctx.strokeStyle=INK;
+    ctx.beginPath();ctx.moveTo(x-5,y-5);ctx.lineTo(x+5,y+5);ctx.moveTo(x+5,y-5);ctx.lineTo(x-5,y+5);ctx.stroke();
+    if(here){ctx.strokeStyle=PINK;ctx.beginPath();ctx.arc(x,y,11+Math.sin(clock/160)*1.5,0,7);ctx.stroke()}
+    const w=ctx.measureText(t.name).width+6, below=t.y<.5;
+    let lx=Math.max(2,Math.min(W-w-2,x-w/2)), ly=below?y+10:y-10-fs-4;
+    ctx.fillStyle=here?PINK:INK; ctx.fillRect(lx,ly,w,fs+4);
+    ctx.fillStyle=here?INK:PAPER; ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillText(t.name,lx+3,ly+2);
+  });
+  ctx.textBaseline='alphabetic';
+  // van
+  let p, dir=1, moving=false;
+  if(trav){
+    const t=Math.min(1,(clock-trav.start)/trav.dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, s=seg(trav.from);
+    p=bez(s,e); const p2=bez(s,Math.min(1,e+.02)); dir=p2.x>=p.x?1:-1; moving=t<1;
+    if(moving&&Math.random()<.3) puffs.push({x:p.x-dir*18,y:p.y-4,born:clock});
+  } else { const t=TOWNS[G.S.town]; p={x:t.x*W,y:t.y*H}; }
+  puffs=puffs.filter(f=>clock-f.born<700);
+  for(const f of puffs){const a=(clock-f.born)/700;ctx.fillStyle=`rgba(20,18,16,${.35*(1-a)})`;ctx.beginPath();ctx.arc(f.x,f.y-a*10,2+a*5,0,7);ctx.fill()}
+  drawVan(p.x,p.y,dir,moving);
+}
+function drawGig(){
+  const g=gigAnim, t=(clock-g.start)/1000, hot=g.agg/10;
+  // stage
+  const sh=H*.2;
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,sh);
+  ctx.fillStyle=PAPER; ctx.font=`700 ${Math.max(10,W/30)}px "Courier New",monospace`; ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.fillText(g.venue.toUpperCase(),8,6); ctx.textAlign='right'; ctx.fillText(g.town.toUpperCase(),W-8,6);
+  ctx.textBaseline='alphabetic';
+  G.members.forEach((m,i)=>{
+    const x=W*(.2+i*.2), b=Math.abs(Math.sin(t*(5+hot*6)+i*1.7))*(4+hot*8), y=sh-6-b;
+    ctx.fillStyle=m.id==='click'?'#9b978c':i%2?PINK:PAPER;
+    if(m.id==='click'){ctx.fillRect(x-7,sh-22,14,18)}
+    else{ctx.beginPath();ctx.arc(x,y-14,5,0,7);ctx.fill();ctx.fillRect(x-4,y-9,8,11);
+      ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-4,y-6);ctx.lineTo(x-10,y-12-b*.5);ctx.moveTo(x+4,y-6);ctx.lineTo(x+10,y-2);ctx.stroke()}
+  });
+  // crowd
+  const cx=W/2, cy=sh+(H-sh)*.5, R=Math.min(W*.42,(H-sh)*.42);
+  const wild=Math.max(0,Math.min(1,(g.q-.4)/.6))*(0.4+hot*.6);
+  for(const d of g.dots){
+    let x,y;
+    if(d.pit){ const a=d.a+t*(.6+wild*4)*d.sp; const r=R*d.r*(1+Math.sin(t*9+d.a*7)*.08*wild);
+      x=cx+Math.cos(a)*r*1.25+Math.sin(t*23+d.a*31)*3*wild; y=cy+Math.sin(a)*r*.8+Math.cos(t*19+d.a*17)*3*wild; }
+    else { x=cx+Math.cos(d.a)*R*1.3*d.r; y=cy+Math.sin(d.a)*R*.85*d.r+Math.abs(Math.sin(t*4+d.a*5))*-3*wild; }
+    ctx.fillStyle=d.pink?PINK:INK; ctx.beginPath(); ctx.arc(x,Math.max(sh+5,y),d.s,0,7); ctx.fill();
+  }
+  ctx.fillStyle=INK; ctx.font=`700 ${Math.max(10,W/30)}px "Courier New",monospace`; ctx.textAlign='left';
+  ctx.fillText(`CROWD ${g.att} / ${g.cap}`,8,H-8);
+  // stamp
+  if(g.reveal){
+    const k=Math.min(1,(clock-g.reveal)/140), sc=2.2-1.2*k;
+    ctx.save(); ctx.translate(W/2,sh+(H-sh)*.5); ctx.rotate(-.14); ctx.scale(sc,sc); ctx.globalAlpha=k;
+    ctx.font=`900 ${Math.min(54,W/6.5)}px Impact,"Arial Black",sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    const w=ctx.measureText(g.label).width+26, h=Math.min(54,W/6.5)+18;
+    ctx.fillStyle=g.good?PINK:PAPER; ctx.fillRect(-w/2,-h/2,w,h); ctx.lineWidth=4; ctx.strokeStyle=INK; ctx.strokeRect(-w/2,-h/2,w,h);
+    ctx.fillStyle=INK; ctx.fillText(g.label,0,2); ctx.restore(); ctx.textBaseline='alphabetic';
+  }
+}
+function draw(){ if(!G) return; ctx.clearRect(0,0,W,H); scene==='gig'?drawGig():drawMap(); }
+
+// ---- run HUD ------------------------------------------------------------------
+let shownFans=0, fansTimer=null;
+function setFans(n){
+  const from=shownFans, t0=performance.now(); clearInterval(fansTimer);
+  fansTimer=setInterval(()=>{const k=Math.min(1,(performance.now()-t0)/500); shownFans=Math.round(from+(n-from)*k); $('fansN').textContent=shownFans.toLocaleString(); if(k>=1)clearInterval(fansTimer)},33);
+}
+function meters(){
+  const S=G.S, set=(id,txt,pct,low)=>{const el=$(id);el.querySelector('b').textContent=txt;el.querySelector('i').style.width=Math.max(0,Math.min(100,pct))+'%';el.classList.toggle('low',low)};
+  set('mCash',money(S.cash),S.cash/8,S.cash<60);
+  set('mVan',S.van>70?'Runs':S.van>40?'Rattles':S.van>15?'Smokes':'Dying',S.van,S.van<30);
+  set('mCoh',S.coh>=65?'Tight':S.coh>=42?'Bickering':S.coh>=22?'Tense':'Toxic',S.coh,S.coh<30);
+  set('mCred',S.cred>=70?'Legit':S.cred>=40?'Fine':S.cred>=20?'Posers':'Sellouts',S.cred,S.cred<25);
+  setFans(Math.round(S.fans));
+}
+const CHIP={fans:['FANS',0],cash:['$',1],van:['VAN',0],coh:['BAND',0],cred:['CRED',0]};
+function chips(d){
+  return '<div class="chips">'+Object.keys(d||{}).filter(k=>d[k]).map(k=>{
+    const v=d[k], s=v>0?'+':'−', a=Math.abs(v).toLocaleString();
+    return `<span class="chip ${v>0?'up':'dn'}">${CHIP[k][1]?s+'$'+a:CHIP[k][0]+' '+s+a}</span>`}).join('')+'</div>';
+}
+function log(text,cls){
+  const el=document.createElement('div'); if(cls) el.className=cls;
+  el.innerHTML=cls==='lap'?text:`<b>${String(G.S.stop).padStart(2,'0')}</b>${text}`;
+  $('log').prepend(el);
+}
+function flyer(title,text,d,opts){
+  const f=$('flyer');
+  f.style.transform=`translateY(-50%) rotate(${(Math.random()*5-2.5).toFixed(1)}deg)`;
+  f.innerHTML=`<h3>${title}</h3><p>${text}</p>`+(d?chips(d):'')+(opts?'<div class="opts">'+opts.map((o,i)=>`<button data-i="${i}">${o.label}<small>${o.hint}</small></button>`).join('')+'</div>':'');
+  f.hidden=false; f.style.animation='none'; void f.offsetWidth; f.style.animation='';
+  if(!opts) return null;
+  return new Promise(res=>{ f.onclick=e=>{const b=e.target.closest('button'); if(b){f.onclick=null;res(+b.dataset.i)}} });
+}
+
+// ---- tour loop ----------------------------------------------------------------
+function show(id){ for(const s of ['setup','run','obit']) $(s).hidden=s!==id; }
+async function startTour(){
+  const my=++runId;
+  audio();
+  G=newGame(cfg,(Math.random()*2**32)>>>0);
+  G.cfg=Object.assign({},cfg,{lineup:Object.assign({},cfg.lineup)});
+  show('run'); fit();
+  waiters=[]; clock=0; scene='map'; trav=null; gigAnim=null; puffs=[]; shownFans=0; running=true;
+  $('log').innerHTML=''; $('flyer').hidden=true;
+  $('rname').innerHTML=''; $('rname').append(cfg.name||'Unnamed Band');
+  const sm=document.createElement('small'); sm.textContent=`${G.van.name} · ${AGG_LAB[cfg.agg]} · ${cfg.manual?'manager':'hands off'}`; $('rname').append(sm);
+  meters(); $('fansN').textContent='0';
+  log(`${G.members.map(m=>m.name).join(', ')} pile into ${G.van.the} with ${money(G.S.cash)} and no plan.`);
+  riff(cfg.agg,1); driveMusic(true);
+  await wait(1400);
+  while(my===runId){
+    const b=G.next(); if(!b) break;
+    if(b.kind==='travel'){
+      if(b.newLap){ log(`LAP ${b.lap} &mdash; bigger rooms, bigger egos`,'lap'); }
+      trav={from:b.from,start:clock,dur:2400};
+      await wait(2500); if(my!==runId) return;
+      trav=null; meters();
+    } else if(b.kind==='choice'){
+      thud();
+      const i=await flyer(b.title,b.text,null,b.opts); if(my!==runId) return;
+      const r=G.choose(i); blip();
+      flyer(r.title,`<b>${r.choice}.</b> ${r.text}`,r.d); meters(); log(`<b style="width:auto;color:inherit">${r.choice}:</b> ${r.text} ${chips(r.d)}`);
+      await wait(3200); if(my!==runId) return; $('flyer').hidden=true;
+    } else if(b.kind==='event'){
+      const bad=(b.d.coh||0)+(b.d.van||0)/2+(b.d.cash||0)/20<0; bad?thud():blip();
+      flyer(b.title,b.text,b.d); meters(); log(`${b.text} ${chips(b.d)}`);
+      await wait(b.choice?4200:3000); if(my!==runId) return; $('flyer').hidden=true;
+    } else if(b.kind==='gig'){
+      const n=Math.max(2,Math.min(150,Math.round(Math.pow(b.att,.8)))), dots=[];
+      for(let i=0;i<n;i++) dots.push({a:Math.random()*6.283,r:.25+Math.random()*.75,sp:.6+Math.random()*.8,s:2.2+Math.random()*1.6,pit:Math.random()<.2+b.q*.6,pink:Math.random()<.12});
+      gigAnim={start:clock,venue:b.venue,town:b.town,att:b.att,cap:b.cap,q:b.q,label:b.label,agg:cfg.agg,dots,good:b.tier==='good'||b.tier==='legendary',reveal:0};
+      scene='gig'; driveMusic(false); const clip=gigMusic(cfg.agg);
+      await wait(2100); if(my!==runId) return;
+      gigAnim.reveal=clock; { const good=b.tier!=='disaster'&&b.tier!=='bad', c=good?CLIP.good:CLIP.bad; if(c) playClip(c,.8); else if(!clip) sting(good); }
+      meters(); log(`${b.town}, ${b.venue}: ${b.text} ${chips(b.d)}`,'gig');
+      await wait(1900); if(my!==runId) return;
+      fadeClip(clip); scene='map'; driveMusic(true);
+    } else if(b.kind==='end'){
+      stopClips(); if(CLIP.end) playClip(CLIP.end,.9); else dirge(); meters();
+      flyer(b.reason==='stranded'?'STRANDED':'IT\'S OVER',b.cause);
+      log(`<b style="width:auto;color:inherit">THE END.</b> ${b.cause}`,'gig');
+      await wait(3600); if(my!==runId) return;
+      obituary(b); return;
+    }
+  }
+}
+$('spd').addEventListener('click',()=>{speed=speed===1?2:speed===2?4:1;$('spd').innerHTML=`SPEED ${speed}&times;`;$('spd').classList.toggle('on',speed>1)});
+function sndLabel(){ $('snd').textContent=soundOn?'SOUND ON':'SOUND OFF'; $('snd').classList.toggle('on',soundOn) }
+$('snd').addEventListener('click',()=>{soundOn=!soundOn;store.set('sound',soundOn);sndLabel();if(soundOn){blip();if(running&&scene==='map')driveMusic(true)}else stopClips()});
+sndLabel();
+function toSetup(){ runId++; running=false; waiters=[]; stopClips(); rollNames(); show('setup'); renderSetup(); }
+$('quit').addEventListener('click',toSetup);
+
+// ---- obituary -------------------------------------------------------------------
+let lastShare='';
+function obituary(b){
+  running=false;
+  const S=G.S, st=G.stats, fans=Math.round(S.fans), key=cfg.manual?'best.manual':'best.auto', prev=store.get(key,0);
+  if(fans>prev) store.set(key,fans);
+  const hall=store.get('hall',[]); hall.push({name:cfg.name||'Unnamed Band',fans,rank:G.rank(),cause:b.cause,mode:cfg.manual?'manual':'auto',gigs:st.gigs});
+  hall.sort((x,y)=>y.fans-x.fans); store.set('hall',hall.slice(0,8));
+  $('oname').textContent=cfg.name||'Unnamed Band';
+  $('omode').textContent=`${G.members.map(m=>m.name).join(' / ')} · ${cfg.manual?'band manager':'hands off'}`;
+  $('ofans').textContent=fans.toLocaleString();
+  $('orank').textContent=G.rank();
+  $('ocause').textContent=b.cause;
+  $('ostats').innerHTML=[[st.gigs,'gigs'],[S.lap,S.lap===1?'lap':'laps'],[st.breakdowns,'break-downs'],[st.fights,'fist fights']].map(([n,l])=>`<div><b>${n}</b>${l}</div>`).join('');
+  const g=x=>x?`<b>${x.town}, ${x.venue}</b> (${x.att}/${x.cap}, +${x.fans} fans). ${x.line}`:'There were no nights.';
+  $('obestgig').innerHTML=g(st.best); $('oworstgig').innerHTML=g(st.worst);
+  const ch=CHEM.filter(c=>ROLES.some(r=>G.cfg.lineup[r]===c.a)&&ROLES.some(r=>G.cfg.lineup[r]===c.b)).map(c=>fill(c.text));
+  if(st.kicked) ch.push(`${st.kicked} is still at that rest stop, as far as anyone knows.`);
+  $('ochemWrap').hidden=!ch.length; $('ochem').innerHTML=ch.join('<br>');
+  $('obest').textContent=fans>prev&&prev>0?`NEW RECORD (was ${prev.toLocaleString()})`:fans>prev?'FIRST TOUR ON THE BOOKS':`Your record: ${prev.toLocaleString()} fans`;
+  lastShare=`THE PITS — ${cfg.name||'My band'} made ${fans.toLocaleString()} fans in ${st.gigs} gigs before the breakup. Rank: ${G.rank()}. Cause of death: ${b.cause}`;
+  show('obit'); $('obit').scrollTop=0;
+}
+$('again').addEventListener('click',()=>startTour());
+$('newband').addEventListener('click',toSetup);
+$('share').addEventListener('click',async()=>{
+  try{ if(navigator.share) await navigator.share({text:lastShare}); else { await navigator.clipboard.writeText(lastShare); $('share').textContent='COPIED'; setTimeout(()=>$('share').textContent='SHARE',1400); } }catch(e){}
+});
+
+renderSetup();
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>

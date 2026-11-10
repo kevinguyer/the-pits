@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#141210"/>
+  <rect x="58" y="92" width="396" height="150" fill="#ebe6d6" transform="rotate(-5 256 167)"/>
+  <text x="256" y="212" font-family="Impact,'Arial Black',sans-serif" font-size="130" font-weight="900" text-anchor="middle" fill="#141210" transform="rotate(-5 256 167)">THE</text>
+  <rect x="48" y="270" width="416" height="170" fill="#ff2e7e" transform="rotate(4 256 355)"/>
+  <text x="256" y="412" font-family="Impact,'Arial Black',sans-serif" font-size="160" font-weight="900" text-anchor="middle" fill="#141210" transform="rotate(4 256 355)">PITS</text>
+</svg>
