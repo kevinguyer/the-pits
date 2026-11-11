@@ -179,11 +179,12 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #fans{transform:rotate(2.5deg)}
 #fans small{transform:rotate(-4deg)}
 #stage{border-width:3px 4px 5px 3px;transform:rotate(.35deg);box-shadow:3px 4px 0 rgba(20,18,16,.3)}
-#stage::after{content:"";position:absolute;left:-12px;top:14px;width:46px;height:15px;background:var(--pink);opacity:.8;transform:rotate(-41deg);pointer-events:none}
+#stage::after{content:"";position:absolute;right:-13px;bottom:16px;width:46px;height:15px;background:var(--pink);opacity:.8;transform:rotate(-41deg);pointer-events:none}
 .m:nth-child(odd){transform:rotate(-1.6deg)}
 .m:nth-child(even){transform:rotate(1.1deg) translateY(2px)}
 .m .tr{border-width:2px 3px 3px 2px}
-#log{border-top-width:3px}
+#log{border-top-width:3px;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+#setup,#obit{scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
 #log>div:nth-child(3n){transform:rotate(-.35deg)}
 #log>div:nth-child(3n+1){transform:rotate(.3deg)}
 #log>div.lap{width:fit-content;transform:rotate(-1.4deg);box-shadow:3px 3px 0 var(--pink);margin:8px 0 9px 4px}
@@ -221,12 +222,32 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #about .plug{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(1.5deg);margin:16px 0 4px}
 #about a{color:var(--ink);font-weight:700;background:var(--pink);padding:0 4px;text-decoration:none;white-space:nowrap}
 #aboutX{position:absolute;top:6px;right:6px;min-height:34px;width:34px;padding:0;font:700 20px/1 "Courier New",monospace;transform:rotate(5deg);background:var(--ink);color:var(--paper)}
+#splash{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:9;text-align:center}
+#splashImg{width:min(108%,58dvh);height:auto;max-width:none;mix-blend-mode:multiply;transform:rotate(-2.5deg);margin:-4dvh 0 -2dvh;pointer-events:none}
+#enter{max-width:280px;font-size:26px;min-height:60px;transform:rotate(1.5deg)}
+#splashNote{font-size:13px;transform:rotate(-3deg);margin:14px 0 0}
+#stage{cursor:pointer}
+#flyer .skip{display:block;margin-top:9px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+#flyer .timer{position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--pink);transform-origin:left;animation:drain linear forwards}
+@keyframes drain{to{transform:scaleX(0)}}
+#flyer.cap{top:auto;bottom:9px;left:3%;right:3%;padding:9px 10px 10px;animation-name:slapCap}
+#flyer.cap::before,#flyer.cap::after{display:none}
+#flyer.cap p{font-weight:700;margin-bottom:6px;font-size:13px}
+#flyer.cap .skip{margin-top:6px}
+@keyframes slapCap{from{transform:translateY(40px);opacity:0}}
 </style>
 </head>
 <body>
 
 <!-- ================= SETUP ================= -->
-<section id="setup" class="screen">
+<section id="splash" class="screen">
+  <img id="splashImg" src="assets/splash.webp" alt="The Pits: a battered tour van" width="800" height="800">
+  <p class="tag">Every band breaks up. How big can yours get first?</p>
+  <button class="big" id="enter">LOAD IN</button>
+  <p class="scrawl" id="splashNote">sound on.</p>
+</section>
+
+<section id="setup" class="screen" hidden>
   <div class="ransom" id="title"></div>
   <p class="tag">Every band breaks up. How big can yours get first?</p>
 
@@ -787,8 +808,29 @@ function audio(){
     dist.curve=c; const g=AC.createGain(); g.gain.value=.16; dist.connect(g); g.connect(AC.destination);
   }catch(e){ soundOn=false; return null } }
   if(AC.state==='suspended') AC.resume();
+  if(!SAMP.started){ SAMP.started=true; sampReady=decodeSamples(); }
   return AC;
 }
+// Real guitar: four chord shots and a falling slide, played as Web Audio buffers so they can be
+// cut short and re-pitched. The synth below is only the fallback when they are not loaded.
+const SAMP={chords:[],slide:null,started:false,out:null};
+let sampReady=Promise.resolve();
+const RAW=/^https?:$/.test(location.protocol)
+  ? ['chord-1','chord-2','chord-3','chord-4','slide'].map(n=>fetch('assets/audio/'+n+'.wav').then(r=>r.ok?r.arrayBuffer():null).catch(()=>null)) : [];
+async function decodeSamples(){
+  SAMP.out=AC.createGain(); SAMP.out.gain.value=.55; SAMP.out.connect(AC.destination);
+  await Promise.all(RAW.map(async (p,i)=>{ try{ const raw=await p; if(!raw) return; const buf=await AC.decodeAudioData(raw); if(i<4) SAMP.chords.push(buf); else SAMP.slide=buf; }catch(e){} }));
+}
+const anyChord=()=>SAMP.chords[Math.random()*SAMP.chords.length|0];
+function shot(buf,{t0=0,rate=1,vol=1,dur=0}={}){
+  const a=audio(); if(!a||!buf) return false;
+  const src=a.createBufferSource(), g=a.createGain(), t=a.currentTime+t0;
+  src.buffer=buf; src.playbackRate.value=rate; g.gain.setValueAtTime(vol,t);
+  if(dur){ g.gain.setValueAtTime(vol,t+dur*.75); g.gain.linearRampToValueAtTime(0,t+dur); }
+  src.connect(g); g.connect(SAMP.out); src.start(t); if(dur) src.stop(t+dur+.02);
+  return true;
+}
+const semi=n=>Math.pow(2,n/12);
 function tone(f,t0,dur,type='sawtooth',vol=.5){
   const a=audio(); if(!a) return;
   const o=a.createOscillator(), g=a.createGain(); o.type=type; o.frequency.setValueAtTime(f,a.currentTime+t0);
@@ -815,17 +857,28 @@ function riff(agg=6, bars=2){
   if(!audio()) return;
   let i; do{ i=Math.random()*RIFFS.length|0 }while(i===lastRiff); lastRiff=i;
   const pat=RIFFS[i], step=.2-agg*.009, key=E*Math.pow(2,(Math.random()*4|0)/12);
-  for(let b=0;b<bars;b++) pat.forEach((semi,n)=>{
+  const buf=anyChord(), tr=Math.random()*3|0;
+  for(let b=0;b<bars;b++) pat.forEach((sm,n)=>{
     const t=(b*pat.length+n)*step;
-    chord(key*Math.pow(2,semi/12),t,step*.92);
+    if(buf) shot(buf,{t0:t,rate:semi(sm-5+tr),dur:step*.96,vol:.75}); else chord(key*Math.pow(2,sm/12),t,step*.92);
     drum(n%2?'snare':'kick',t); drum('hat',t); drum('hat',t+step/2);
     if(agg>=7&&n%2===0) drum('kick',t+step/2);
   });
 }
-function blip(){ tone(660,0,.05,'square',.2) }
-function thud(){ tone(110,0,.25); tone(70,.08,.3); drum('kick',0) }
-function sting(good){ good?[196,247,294,392].forEach((f,i)=>{chord(f,i*.09,.2);drum('snare',i*.09)}):[196,185,147,98].forEach((f,i)=>chord(f,i*.12,.22)) }
-function dirge(){ [147,139,131,98,73].forEach((f,i)=>{chord(f,i*.3,.5);drum('kick',i*.3)}) }
+function blip(){ if(!shot(anyChord(),{vol:.32,dur:.13,rate:semi([0,2,5,7][Math.random()*4|0])})) tone(660,0,.05,'square',.2) }
+function hit(){ if(!shot(anyChord(),{vol:.7,rate:semi([-2,0,3][Math.random()*3|0])})) blip() }
+function thud(){ if(shot(SAMP.slide,{vol:1})) return; tone(110,0,.25); tone(70,.08,.3); drum('kick',0) }
+function sting(good){
+  const c=anyChord();
+  if(good&&c){ shot(c,{rate:semi(0),dur:.17,vol:.7}); shot(c,{t0:.16,rate:semi(5),dur:.17,vol:.7}); shot(c,{t0:.32,rate:semi(7),vol:.85}); return; }
+  if(!good&&SAMP.slide){ shot(SAMP.slide,{vol:1,rate:.9}); return; }
+  good?[196,247,294,392].forEach((f,i)=>{chord(f,i*.09,.2);drum('snare',i*.09)}):[196,185,147,98].forEach((f,i)=>chord(f,i*.12,.22));
+}
+function dirge(){
+  const c=anyChord();
+  if(c&&SAMP.slide){ shot(c,{rate:semi(-5),vol:.8}); shot(SAMP.slide,{t0:.7,rate:.8,vol:1}); shot(c,{t0:1.9,rate:semi(-12),vol:.9}); drum('kick',0); drum('kick',1.9); return; }
+  [147,139,131,98,73].forEach((f,i)=>{chord(f,i*.3,.5);drum('kick',i*.3)});
+}
 
 // Optional recorded clips. Drop files in assets/audio/ (see the README there);
 // anything missing falls back to the synth above.
@@ -839,28 +892,56 @@ function probe(name){
     tryExt(['mp3','wav']);
   });
 }
+// Songs played during gigs. Add a file to assets/audio/ and its name (no extension) here.
+const SONGS=['bite-down','jonny-broke-a-tooth','oh-the-pits-are-a-calling','the-pits-are-calling','the-pits','wreck-the-scene'];
 async function loadClips(){
   if(!/^(https?|file):$/.test(location.protocol)) return;
   for(const k of ['drive','good','bad','end']) probe(k).then(a=>CLIP[k]=a);
-  for(let i=1;i<=8;i++){ const a=await probe('gig-'+i); if(!a) break; CLIP.gig.push(a); }
+  for(const n of SONGS) probe(n).then(a=>{ if(a) CLIP.gig.push(a) });
 }
 loadClips();
 let playing=new Set(), lastGig=null;
-function playClip(a,vol=1,loop=false){
+// Volume goes through a Web Audio gain node where possible: iOS ignores <audio>.volume, so fades need it.
+function gainOf(a){
+  if(a._g||a._gTried) return a._g||null;
+  const ac=audio(); if(!ac) return null;
+  a._gTried=true;
+  try{ const src=ac.createMediaElementSource(a); a._g=ac.createGain(); src.connect(a._g); a._g.connect(ac.destination); }catch(e){ a._g=null }
+  return a._g;
+}
+function setVol(a,v,ms=0){
+  const g=gainOf(a); clearInterval(a._fade);
+  if(g){ const t=AC.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t); g.gain.linearRampToValueAtTime(v,t+ms/1000+.01); return; }
+  if(!ms){ a.volume=v; return; }
+  const v0=a.volume, t0=performance.now();
+  a._fade=setInterval(()=>{ const k=Math.min(1,(performance.now()-t0)/ms); a.volume=v0+(v-v0)*k; if(k>=1) clearInterval(a._fade) },30);
+}
+function playClip(a,vol=1,loop=false,fadeIn=0,restart=true){
   if(!a||!soundOn) return null;
-  clearInterval(a._fade); a.loop=loop; a.volume=vol; try{ a.currentTime=0 }catch(e){}
+  clearTimeout(a._stop); a.loop=loop; if(restart){ try{ a.currentTime=0 }catch(e){} }
+  setVol(a,fadeIn?0:vol); if(fadeIn) setVol(a,vol,fadeIn);
   const p=a.play(); if(p) p.catch(()=>{}); playing.add(a); return a;
 }
 function fadeClip(a,ms=350){
-  if(!a) return; clearInterval(a._fade); const v0=a.volume, t0=performance.now();
-  a._fade=setInterval(()=>{ const k=(performance.now()-t0)/ms; if(k>=1){ clearInterval(a._fade); a.pause(); playing.delete(a) } else a.volume=v0*(1-k) },30);
+  if(!a) return; setVol(a,0,ms); clearTimeout(a._stop);
+  a._stop=setTimeout(()=>{ a.pause(); playing.delete(a) },ms+60);
 }
-function stopClips(){ for(const a of [...playing]){ clearInterval(a._fade); a.pause(); playing.delete(a) } }
+function stopClips(){ for(const a of [...playing]){ clearTimeout(a._stop); clearInterval(a._fade); a.pause(); playing.delete(a) } }
+// Each gig fades in a different song, picking up where that song last left off.
 function gigMusic(agg){
-  if(CLIP.gig.length){ let a; do{ a=CLIP.gig[Math.random()*CLIP.gig.length|0] }while(CLIP.gig.length>1&&a===lastGig); lastGig=a; return playClip(a,.9); }
+  if(CLIP.gig.length){
+    let a; do{ a=CLIP.gig[Math.random()*CLIP.gig.length|0] }while(CLIP.gig.length>1&&a===lastGig); lastGig=a;
+    const fresh=!(a.duration-a.currentTime>7);
+    return playClip(a,.95,false,fresh?120:450,fresh);
+  }
   riff(agg); return null;
 }
 function driveMusic(on){ const a=CLIP.drive; if(!a) return; if(on){ if(a.paused) playClip(a,.3,true) } else if(!a.paused) fadeClip(a,250); }
+
+// ---- crowd photos that ghost in and out over the pit ----
+const CROWD=[];
+if(/^(https?|file):$/.test(location.protocol)) for(let i=1;i<=15;i++){ const im=new Image(); im.onload=()=>CROWD.push(im); im.src='assets/crowd/crowd-'+String(i).padStart(2,'0')+'.webp'; }
+function pickCrowd(n){ const p=CROWD.slice(), out=[]; while(p.length&&out.length<n) out.push(p.splice(Math.random()*p.length|0,1)[0]); return out; }
 
 // ---- game clock (respects speed) ---------------------------------------------
 let clock=0, speed=1, waiters=[], lastT=0, running=false, runId=0;
@@ -959,6 +1040,18 @@ function drawGig(){
     else{ctx.beginPath();ctx.arc(x,y-14,5,0,7);ctx.fill();ctx.fillRect(x-4,y-9,8,11);
       ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-4,y-6);ctx.lineTo(x-10,y-12-b*.5);ctx.moveTo(x+4,y-6);ctx.lineTo(x+10,y-2);ctx.stroke()}
   });
+  // ghosted crowd photos
+  if(g.photo&&g.pics.length){
+    const per=1900, tt=clock-g.start, ah=H-sh, size=Math.max(W,ah)*1.12;
+    ctx.save(); ctx.beginPath(); ctx.rect(0,sh,W,ah); ctx.clip();
+    for(let L=0;L<2;L++){
+      const u=tt/per+L*.5, ph=u%1, im=g.pics[(Math.floor(u)*2+L)%g.pics.length];
+      const z=1+ph*.1, sz=size*z, jx=Math.sin(t*31+L)*2.5*hot, jy=Math.cos(t*27+L)*2.5*hot;
+      ctx.globalAlpha=Math.sin(ph*Math.PI)*g.photo;
+      ctx.drawImage(im,(W-sz)/2+jx+(L?6:-6),H-sz+ah*.04*z+jy,sz,sz);
+    }
+    ctx.restore(); ctx.globalAlpha=1;
+  }
   // crowd
   const cx=W/2, cy=sh+(H-sh)*.5, R=Math.min(W*.42,(H-sh)*.42);
   const wild=Math.max(0,Math.min(1,(g.q-.4)/.6))*(0.4+hot*.6);
@@ -970,11 +1063,11 @@ function drawGig(){
     ctx.fillStyle=d.pink?PINK:INK; ctx.beginPath(); ctx.arc(x,Math.max(sh+5,y),d.s,0,7); ctx.fill();
   }
   ctx.fillStyle=INK; ctx.font=`700 ${Math.max(10,W/30)}px "Courier New",monospace`; ctx.textAlign='left';
-  ctx.fillText(`CROWD ${g.att} / ${g.cap}`,8,H-8);
+  ctx.fillText(`CROWD ${g.att} / ${g.cap}`,8,sh+16);
   // stamp
   if(g.reveal){
     const k=Math.min(1,(clock-g.reveal)/140), sc=2.2-1.2*k;
-    ctx.save(); ctx.translate(W/2,sh+(H-sh)*.5); ctx.rotate(-.14); ctx.scale(sc,sc); ctx.globalAlpha=k;
+    ctx.save(); ctx.translate(W/2,sh+(H-sh)*.34); ctx.rotate(-.14); ctx.scale(sc,sc); ctx.globalAlpha=k;
     ctx.font=`900 ${Math.min(54,W/6.5)}px Impact,"Arial Black",sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
     const w=ctx.measureText(g.label).width+26, h=Math.min(54,W/6.5)+18;
     ctx.fillStyle=g.good?PINK:PAPER; ctx.fillRect(-w/2,-h/2,w,h); ctx.lineWidth=4; ctx.strokeStyle=INK; ctx.strokeRect(-w/2,-h/2,w,h);
@@ -1008,17 +1101,25 @@ function log(text,cls){
   el.innerHTML=cls==='lap'?text:`<b>${String(G.S.stop).padStart(2,'0')}</b>${text}`;
   $('log').prepend(el);
 }
-function flyer(title,text,d,opts){
-  const f=$('flyer');
-  f.style.transform=`translateY(-50%) rotate(${(Math.random()*5-2.5).toFixed(1)}deg)`;
-  f.innerHTML=`<h3>${title}</h3><p>${text}</p>`+(d?chips(d):'')+(opts?'<div class="opts">'+opts.map((o,i)=>`<button data-i="${i}">${o.label}<small>${o.hint}</small></button>`).join('')+'</div>':'');
+// Messages stay up long enough to read (longer for longer text); a tap anywhere on the stage skips ahead.
+let tapRes=null;
+function waitTap(ms){ return new Promise(res=>{ let done=false; const fin=()=>{ if(!done){ done=true; if(tapRes===fin) tapRes=null; res() } }; tapRes=fin; wait(ms).then(fin); }) }
+$('stage').addEventListener('click',e=>{ if(!e.target.closest('.opts')&&tapRes) tapRes() });
+const readTime=t=>Math.min(9500,3600+String(t).replace(/<[^>]+>/g,'').length*48);
+function flyer(title,text,d,opts,cap){
+  const f=$('flyer'), ms=readTime(text), r=(Math.random()*5-2.5).toFixed(1);
+  f.className=cap?'cap':'';
+  f.style.transform=cap?`rotate(${r/2}deg)`:`translateY(-50%) rotate(${r}deg)`;
+  f.innerHTML=(title?`<h3>${title}</h3>`:'')+`<p>${text}</p>`+(d?chips(d):'')
+    +(opts?'<div class="opts">'+opts.map((o,i)=>`<button data-i="${i}">${o.label}<small>${o.hint}</small></button>`).join('')+'</div>'
+          :`<small class="skip">tap to continue</small><i class="timer" style="animation-duration:${Math.round(ms/speed)}ms"></i>`);
   f.hidden=false; f.style.animation='none'; void f.offsetWidth; f.style.animation='';
-  if(!opts) return null;
+  if(!opts) return waitTap(ms);
   return new Promise(res=>{ f.onclick=e=>{const b=e.target.closest('button'); if(b){f.onclick=null;res(+b.dataset.i)}} });
 }
 
 // ---- tour loop ----------------------------------------------------------------
-function show(id){ for(const s of ['setup','run','obit']) $(s).hidden=s!==id; }
+function show(id){ for(const s of ['splash','setup','run','obit']) $(s).hidden=s!==id; }
 async function startTour(){
   const my=++runId;
   audio();
@@ -1043,28 +1144,29 @@ async function startTour(){
     } else if(b.kind==='choice'){
       thud();
       const i=await flyer(b.title,b.text,null,b.opts); if(my!==runId) return;
-      const r=G.choose(i); blip();
-      flyer(r.title,`<b>${r.choice}.</b> ${r.text}`,r.d); meters(); log(`<b style="width:auto;color:inherit">${r.choice}:</b> ${r.text} ${chips(r.d)}`);
-      await wait(3200); if(my!==runId) return; $('flyer').hidden=true;
+      const r=G.choose(i); hit();
+      const shown=flyer(r.title,`<b>${r.choice}.</b> ${r.text}`,r.d); meters(); log(`<b style="width:auto;color:inherit">${r.choice}:</b> ${r.text} ${chips(r.d)}`);
+      await shown; if(my!==runId) return; $('flyer').hidden=true;
     } else if(b.kind==='event'){
-      const bad=(b.d.coh||0)+(b.d.van||0)/2+(b.d.cash||0)/20<0; bad?thud():blip();
-      flyer(b.title,b.text,b.d); meters(); log(`${b.text} ${chips(b.d)}`);
-      await wait(b.choice?4200:3000); if(my!==runId) return; $('flyer').hidden=true;
+      const bad=(b.d.coh||0)+(b.d.van||0)/2+(b.d.cash||0)/20<0; bad?thud():hit();
+      const shown=flyer(b.title,b.text,b.d); meters(); log(`${b.text} ${chips(b.d)}`);
+      await shown; if(my!==runId) return; $('flyer').hidden=true;
     } else if(b.kind==='gig'){
       const n=Math.max(2,Math.min(150,Math.round(Math.pow(b.att,.8)))), dots=[];
       for(let i=0;i<n;i++) dots.push({a:Math.random()*6.283,r:.25+Math.random()*.75,sp:.6+Math.random()*.8,s:2.2+Math.random()*1.6,pit:Math.random()<.2+b.q*.6,pink:Math.random()<.12});
-      gigAnim={start:clock,venue:b.venue,town:b.town,att:b.att,cap:b.cap,q:b.q,label:b.label,agg:cfg.agg,dots,good:b.tier==='good'||b.tier==='legendary',reveal:0};
+      gigAnim={start:clock,venue:b.venue,town:b.town,att:b.att,cap:b.cap,q:b.q,label:b.label,agg:cfg.agg,dots,good:b.tier==='good'||b.tier==='legendary',reveal:0,
+        pics:pickCrowd(3),photo:b.att<10?0:Math.min(.5,.1+.2*Math.min(1,b.att/150)+.2*Math.max(0,Math.min(1,(b.q-.4)/.6)))};
       scene='gig'; driveMusic(false); const clip=gigMusic(cfg.agg);
-      await wait(2100); if(my!==runId) return;
+      await wait(clip?3000:2100); if(my!==runId) return;
       gigAnim.reveal=clock; { const good=b.tier!=='disaster'&&b.tier!=='bad', c=good?CLIP.good:CLIP.bad; if(c) playClip(c,.8); else if(!clip) sting(good); }
       meters(); log(`${b.town}, ${b.venue}: ${b.text} ${chips(b.d)}`,'gig');
-      await wait(1900); if(my!==runId) return;
-      fadeClip(clip); scene='map'; driveMusic(true);
+      await flyer('',b.text,b.d,null,true); if(my!==runId) return; $('flyer').hidden=true;
+      fadeClip(clip,1500/speed); scene='map'; driveMusic(true);
     } else if(b.kind==='end'){
       stopClips(); if(CLIP.end) playClip(CLIP.end,.9); else dirge(); meters();
-      flyer(b.reason==='stranded'?'STRANDED':'IT\'S OVER',b.cause);
+      const shown=flyer(b.reason==='stranded'?'STRANDED':'IT\'S OVER',b.cause);
       log(`<b style="width:auto;color:inherit">THE END.</b> ${b.cause}`,'gig');
-      await wait(3600); if(my!==runId) return;
+      await shown; if(my!==runId) return;
       obituary(b); return;
     }
   }
@@ -1106,6 +1208,9 @@ $('share').addEventListener('click',async()=>{
 });
 
 renderSetup();
+$('enter').addEventListener('click',()=>{ audio(); sampReady.then(()=>riff(7,1)); show('setup'); });
+$('splashImg').addEventListener('error',()=>show('setup'));
+if(!/^(https?|file):$/.test(location.protocol)) show('setup');
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>

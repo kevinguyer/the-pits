@@ -1,6 +1,6 @@
 // Network first, cache as the offline fallback.
-const CACHE = 'the-pits-v3';
-const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+const CACHE = 'the-pits-v4';
+const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'assets/splash.webp', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   self.skipWaiting();

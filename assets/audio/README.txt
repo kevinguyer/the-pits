@@ -1,14 +1,15 @@
-THE PITS - optional recorded audio
+THE PITS - audio
 
-Drop files here with these exact names (.mp3 or .wav). Every one is optional;
-anything missing falls back to the built-in synth.
+Songs played during gigs are the .mp3 files in this folder that are listed in
+the SONGS array near the top of the sound code in index.html. To add one, drop
+the file here and add its name (without .mp3) to that list. Each gig fades in a
+different song and picks up where that song last left off.
 
-  gig-1.mp3 ... gig-8.mp3   Riffs played during a gig. Number them from 1 with
-                            no gaps. 4-6 seconds each, starts instantly, no
-                            intro. One is picked at random per gig and faded
-                            out when the gig ends.
-  drive.mp3                 Loops quietly while the van is on the map. 8-20
-                            seconds, should loop cleanly.
-  good.mp3                  Short hit when a gig goes well (1-2 s), e.g. crowd roar.
-  bad.mp3                   Short hit when a gig bombs (1-2 s), e.g. feedback, one boo.
-  end.mp3                   The breakup (3-4 s), e.g. a chord collapsing into feedback.
+Optional extras, picked up automatically if present (.mp3 or .wav):
+
+  drive.mp3   Loops quietly while the van is on the map. Should loop cleanly.
+  good.mp3    Short hit when a gig goes well (1-2 s), e.g. crowd roar.
+  bad.mp3     Short hit when a gig bombs (1-2 s), e.g. feedback, one boo.
+  end.mp3     The breakup (3-4 s), e.g. a chord collapsing into feedback.
+
+With no song files at all, the game falls back to its built-in synth.
