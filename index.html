@@ -1164,7 +1164,8 @@ function waitTap(ms){ return new Promise(res=>{ let done=false; const fin=()=>{ 
 $('stage').addEventListener('click',e=>{ if(!e.target.closest('.opts')&&tapRes) tapRes() });
 const readTime=t=>Math.min(9500,3600+String(t).replace(/<[^>]+>/g,'').length*48);
 function flyer(title,text,d,opts,cap){
-  const f=$('flyer'), ms=readTime(text), r=(Math.random()*5-2.5).toFixed(1);
+  // at 4x the player is skipping through: every message gets a flat 0.7 s of real time
+  const f=$('flyer'), ms=speed>=4?2800:readTime(text), r=(Math.random()*5-2.5).toFixed(1);
   f.className=cap?'cap':'';
   f.style.transform=cap?`rotate(${r/2}deg)`:`translateY(-50%) rotate(${r}deg)`;
   f.innerHTML=(title?`<h3>${title}</h3>`:'')+`<p>${text}</p>`+(d?chips(d):'')
