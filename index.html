@@ -9,6 +9,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&display=swap">
 <title>The Pits</title>
 <style>
 :root{--paper:#ebe6d6;--ink:#141210;--pink:#ff2e7e;--dim:#6b665a;--line:rgba(20,18,16,.25)}
@@ -138,7 +140,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:26px;background:var(--pink
 .screen::before{content:"";position:absolute;left:71%;top:0;bottom:0;width:3px;background:rgba(20,18,16,.06);pointer-events:none}
 #setup::after{content:"";position:absolute;right:-34px;top:470px;width:150px;height:140px;border-radius:50%;border:8px solid rgba(96,62,20,.13);
   box-shadow:inset 0 0 0 2px rgba(96,62,20,.07),14px 9px 0 -68px rgba(96,62,20,.1);transform:rotate(24deg);pointer-events:none}
-.scrawl,.tag,#bestLine,.slide .note{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive}
+.scrawl,.tag,#bestLine,.slide .note{font-family:"Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive}
 .tag{transform:rotate(-1.6deg);font-size:12.5px;color:var(--ink)}
 #bestLine{transform:rotate(1.2deg)}
 .slide .note{transform:rotate(-.6deg);transform-origin:left;font-size:11.5px}
@@ -207,7 +209,7 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #obit h4{display:block;width:fit-content;margin:14px auto 5px;background:var(--ink);color:var(--paper);padding:1px 7px;transform:rotate(-1.5deg)}
 #obit h4:nth-of-type(even){transform:rotate(1.3deg)}
 #obit .txt:nth-of-type(odd){transform:rotate(.4deg)}
-#obest{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(-2deg)}
+#obest{font-family:"Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(-2deg)}
 #obit .btns .two button:first-child{transform:rotate(1.2deg)}
 #obit .btns .two button:last-child{transform:rotate(-1.8deg)}
 #aboutRow{text-align:center;margin:22px 0 4px}
@@ -219,13 +221,31 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #about .sheet::before{content:"";position:absolute;top:-10px;left:36%;width:74px;height:19px;background:var(--pink);opacity:.85;transform:rotate(4deg)}
 #about h3{margin:0 0 10px;font:30px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.06em;text-shadow:2px 2px 0 rgba(255,46,126,.6)}
 #about p{margin:0 0 12px;font-size:14px}
-#about .plug{font-family:"Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(1.5deg);margin:16px 0 4px}
+#about .plug{font-family:"Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(1.5deg);margin:16px 0 4px}
 #about a{color:var(--ink);font-weight:700;background:var(--pink);padding:0 4px;text-decoration:none;white-space:nowrap}
 #aboutX{position:absolute;top:6px;right:6px;min-height:34px;width:34px;padding:0;font:700 20px/1 "Courier New",monospace;transform:rotate(5deg);background:var(--ink);color:var(--paper)}
 #splash{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:9;text-align:center}
 #splashImg{width:min(108%,58dvh);height:auto;max-width:none;mix-blend-mode:multiply;transform:rotate(-2.5deg);margin:-4dvh 0 -2dvh;pointer-events:none}
 #enter{max-width:280px;font-size:26px;min-height:60px;transform:rotate(1.5deg)}
 #splashNote{font-size:13px;transform:rotate(-3deg);margin:14px 0 0}
+.row.four{grid-template-columns:repeat(2,1fr)}
+.lock{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.03em;border:2px dashed var(--ink);padding:5px 8px;opacity:.65;transform:rotate(-.7deg)}
+#life{margin:12px 0 2px;border:solid var(--ink);border-width:2px 3px 3px 2px;padding:6px 9px 7px;font-size:11px;font-weight:700;letter-spacing:.06em;transform:rotate(.6deg);background:rgba(255,255,255,.25)}
+#life b{font:22px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.03em;margin-right:5px}
+#life .tr{height:7px;background:rgba(20,18,16,.16);margin:4px 0 5px}
+#life .tr i{display:block;height:100%;background:var(--pink)}
+#life span{font-weight:400;letter-spacing:0;color:var(--dim)}
+#ostory p{margin:0 0 5px}
+#ounlock{margin:12px 0 2px;font-size:12px;color:var(--dim)}
+#ounlock.new{color:var(--ink);background:var(--pink);border:3px solid var(--ink);padding:8px 10px;font-weight:700;font-size:13px;transform:rotate(-1.6deg);box-shadow:4px 4px 0 var(--ink)}
+#ounlock.new b{display:block;font:24px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.08em}
+#poster{position:fixed;inset:0;z-index:20;background:rgba(20,18,16,.9);display:flex;align-items:center;justify-content:center;padding:16px}
+#poster .sheet{position:relative;width:100%;max-width:400px;text-align:center}
+#posterImg{display:block;width:auto;height:auto;max-width:100%;max-height:70dvh;aspect-ratio:4/5;margin:0 auto 16px;background:var(--paper);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--pink);transform:rotate(-1.2deg)}
+#poster .two{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+#poster .two button{min-height:52px;font-weight:700;letter-spacing:.1em;background:var(--paper)}
+#posterShare{background:var(--pink)!important;font:22px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.08em;transform:rotate(-1deg)}
+#posterX{position:absolute;top:-8px;right:-4px;z-index:2;min-height:36px;width:36px;padding:0;font:700 20px/1 "Courier New",monospace;transform:rotate(5deg);background:var(--paper)}
 #stage{cursor:pointer}
 #flyer .skip{display:block;margin-top:9px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 #flyer .timer{position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--pink);transform-origin:left;animation:drain linear forwards}
@@ -252,6 +272,7 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
   <p class="tag">Every band breaks up. How big can yours get first?</p>
 
   <div class="name"><input id="bname" maxlength="28" aria-label="Band name" autocomplete="off" spellcheck="false"><button id="reroll" aria-label="New band name">&#9860;</button></div>
+  <div id="life"><b id="lifeN">0</b> LIFETIME FANS<div class="tr"><i id="lifeBar"></i></div><span id="lifeNext"></span></div>
 
   <h2>THE BAND <button id="recast">NEW AUDITIONS</button></h2>
   <div id="lineup"></div>
@@ -259,6 +280,7 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
   <h2>THE VAN</h2>
   <div class="row" id="vans"></div>
   <p class="blurb" id="vanBlurb"></p>
+  <p class="lock" id="vanLock" hidden></p>
 
   <h2>THE SETLIST</h2>
   <div class="slide">
@@ -321,17 +343,27 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
     <div id="orank"></div>
     <h4>Cause of death</h4>
     <div id="ocause"></div>
+    <div id="ostoryWrap"><h4>The last days</h4><div class="txt" id="ostory"></div></div>
     <div id="ostats"></div>
     <h4>Best night</h4><div class="txt" id="obestgig"></div>
     <h4>Worst night</h4><div class="txt" id="oworstgig"></div>
     <div id="ochemWrap"><h4>What you didn't know</h4><div class="txt" id="ochem"></div></div>
     <div id="obest"></div>
+    <div id="ounlock"></div>
   </div>
   <div class="btns">
     <button class="big" id="again">SAME BAND, NEW TOUR</button>
-    <div class="two"><button id="newband">CHANGE THE PLAN</button><button id="share">SHARE</button></div>
+    <div class="two"><button id="newband">CHANGE THE PLAN</button><button id="share">TOUR POSTER</button></div>
   </div>
 </section>
+
+<div id="poster" hidden>
+  <div class="sheet" role="dialog" aria-label="Tour poster">
+    <button id="posterX" aria-label="Close">&times;</button>
+    <img id="posterImg" alt="Tour poster" width="1080" height="1350">
+    <div class="two"><button id="posterShare">SHARE</button><button id="posterSave">SAVE</button></div>
+  </div>
+</div>
 
 <div id="about" hidden>
   <div class="sheet" role="dialog" aria-label="About The Pits">
@@ -353,19 +385,23 @@ const CAST = {
   vocals: [
     {id:'spit',   t:4,c:5,e:4,s:3, cost:300, names:['Spit','Johnny Tetanus','Phlegm Fatale','Mucus Aurelius','Scabies Jane','Gob','Bile Duct Tony','Rabid Debbie',"Dick Fungus","Phil Latio","Anita Shower","Chlamydia Jones","Taint Nick"], blurb:'Huge charisma. Wins crowds. Will fight a sound guy over nothing.'},
     {id:'brenda', t:3,c:1,e:2,s:4, cost:150, names:['Brenda','Audit Annie','W-2 Wendy','Fiscal Deb','Net-30 Janet','Carol (Payroll)','Escrow Flo','Linda from HR',"Anita Raise","Accrual Intentions","Fiscal Sharon"], blurb:'From accounting. Screams like a spreadsheet error. Merch sells better.'},
-    {id:'lord',   t:5,c:3,e:5,s:2, cost:450, names:['Lord Tinnitus','Baron Von Feedback','Count Backwards','Duke Nausea','Sir Vomitus','The Archbishop','Prince Harming','Pope Urinal II',"Lord Girth","Dong Quixote","Sir Cumference","His Royal Thighness"], blurb:'A once-in-a-generation voice. Insists on the full title, every time. Ego only goes up.'}],
+    {id:'lord',   t:5,c:3,e:5,s:2, cost:450, names:['Lord Tinnitus','Baron Von Feedback','Count Backwards','Duke Nausea','Sir Vomitus','The Archbishop','Prince Harming','Pope Urinal II',"Lord Girth","Dong Quixote","Sir Cumference","His Royal Thighness"], blurb:'A once-in-a-generation voice. Insists on the full title, every time. Ego only goes up.'},
+    {id:'karen',  t:3,c:4,e:4,s:3, cost:350, unlock:800, names:['Karen','HOA Linda','Coupon Carol','Deb From the Cul-de-Sac','One-Star Susan','Manager-Seeking Missile','Live Laugh Lacerate','Pam (Speaking)','Neighborhood Watch Barb','Reply-All Rhonda'], blurb:'Has spoken to every manager in the Midwest. The band always gets paid, and then some.'}],
   guitar: [
     {id:'stitches',t:4,c:4,e:3,s:3, cost:300, names:['Stitches','Roadrash','Concussion Dan','Six Staples','Tourniquet','Femur','Skin Graft Greg','Whiplash Trish',"Groin Pull Gary","Hernia","Compound Fracture"], blurb:'Dives off anything. Crowds love it. So do emergency rooms.'},
     {id:'trevor', t:5,c:1,e:4,s:4, cost:400, names:['Trevor','Julian','Tristan','Sebastian','Dorian','Thelonious Punk','Alistair','Crispin',"Tarquin","Ludwig van Blowhard"], blurb:'Jazz school dropout. Sulks when the setlist gets too dumb and loud.'},
-    {id:'rat',    t:2,c:3,e:1,s:5, cost:50,  names:['Rat','Roach','Weasel','Grub','Dumpster Dave','Raccoon','Tick','Crusty Pete',"Skidmark","Crabs","Butt Rash Bob","Taint"], blurb:'Knows two chords. Can fix a van with a coat hanger for almost nothing.'}],
+    {id:'rat',    t:2,c:3,e:1,s:5, cost:50,  names:['Rat','Roach','Weasel','Grub','Dumpster Dave','Raccoon','Tick','Crusty Pete',"Skidmark","Crabs","Butt Rash Bob","Taint"], blurb:'Knows two chords. Can fix a van with a coat hanger for almost nothing.'},
+    {id:'dad',    t:3,c:3,e:2,s:2, cost:300, unlock:4000, names:['Divorced Greg','Weekend Dad Todd','Alimony Tony','Custody Craig','Midlife Chrysler','Two-Car Garage Gary','Cool Dad Brad','Vasectomy Vince','Cargo Shorts Carl','Recently Single Steve'], blurb:'Recently divorced. Owns a $4,000 guitar and a gas card. Asleep by ten.'}],
   bass: [
     {id:'dale',   t:1,c:1,e:1,s:5, cost:0,   names:['Dale','Gary','Doug','Keith','Ron','Neil','Carl','Just Steve',"Richard (Dick)","Normal Phil"], blurb:'Cannot play. Owns the PA. The only one with a licence. Drives gently.'},
     {id:'vex',    t:4,c:3,e:3,s:3, cost:300, names:['Vex','Hex','Jinx','Roxy Mortis','Lola Regret','Nyx','Trixie Hazard','Bad Idea Brad',"Sloppy Seconds","Walk of Shane","Ivana Regret","Friends With Benedict"], blurb:'Has an ex in every town. They all come to the show. Not all of them are happy.'},
-    {id:'marge',  t:3,c:2,e:2,s:4, cost:200, names:['Sister Margaret','Sister Agnes','Sister Mary Mayhem','Nun Chuck','Sister Act Up','Sister Bernadeath','Holy Moly Dolores','Sister Fister',"Sister Blister","Nun of Your Business","Sister Mary Jane","Sister Spanks"], blurb:'Lapsed nun. Ends fistfights with a single look.'}],
+    {id:'marge',  t:3,c:2,e:2,s:4, cost:200, names:['Sister Margaret','Sister Agnes','Sister Mary Mayhem','Nun Chuck','Sister Act Up','Sister Bernadeath','Holy Moly Dolores','Sister Fister',"Sister Blister","Nun of Your Business","Sister Mary Jane","Sister Spanks"], blurb:'Lapsed nun. Ends fistfights with a single look.'},
+    {id:'ghost',  t:4,c:2,e:0,s:5, cost:350, unlock:9500, names:['The Late Brian','Ectoplasm Pam','Dead Fred','Poltergeist Pete','Still Dead Ted','Open Casket Otis','Boo Diddley','Banshee Sheila','Rigor Morris','Formaldehyde Heidi'], blurb:'Died in 1987. Still makes soundcheck. Never eats, never sleeps, never fights. Haunts the merch table.'}],
   drums: [
     {id:'mother', t:5,c:2,e:3,s:3, cost:400, names:['Mother','Nana','Auntie Christ','Grandma Mosh','Mrs. Kowalski','Ma','Meemaw','Great-Aunt Riot',"Granny Panties","Nana Spanks","Gam-Gam Slam"], blurb:'54. The best musician here by a mile. Zero patience for nonsense.'},
     {id:'gus',    t:3,c:5,e:2,s:4, cost:150, names:['Gus','Critter','Mange','Fleabag','Kennel Kyle','Feral Cheryl','Roadkill Rick','Worms',"Dog Breath","Heavy Petting","Leg Humper"], blurb:'Adopts every stray animal between here and the next gig.'},
-    {id:'click',  t:4,c:1,e:0,s:2, cost:250, names:['Click Track','DR-666','The Metronome','Beep','Robo-Dave','808 Lives','Dolly','Drummer.exe',"The Vibrator","Auto-Erotic","Sir Beats-a-Lot"], blurb:'A drum machine taped to a hand truck. Never argues. Purists hate it. Fears rain.'}]
+    {id:'click',  t:4,c:1,e:0,s:2, cost:250, names:['Click Track','DR-666','The Metronome','Beep','Robo-Dave','808 Lives','Dolly','Drummer.exe',"The Vibrator","Auto-Erotic","Sir Beats-a-Lot"], blurb:'A drum machine taped to a hand truck. Never argues. Purists hate it. Fears rain.'},
+    {id:'bear',   t:4,c:5,e:1,s:5, cost:500, unlock:17000, names:['Actual Bear','Mr. Snuggles','Ursa Major Problem','Smokey the Felon','Grizzly Madam','Bear Minimum','Claw Enforcement','Hibernation Hank','Unbearable Barry','Honey (Not a Pet Name)'], blurb:'An actual bear, loose from a roadside zoo. Hits hard. Draws a crowd. Eats the rider, and sometimes the promoter.'}]
 };
 // Each cast member is an archetype: stats and quirk are fixed, the name is re-rolled.
 const NAME = {};
@@ -375,7 +411,8 @@ const fill = t => String(t).replace(/\{(\w+)\}/g, (all,id) => NAME[id] || all);
 const VANS = [
   {id:'coffin',  name:'The Coffin',  the:'the Coffin',     cost:0,   bd:.2, wear:1.5, gas:1.0, comfort:0,   rel:1, cmf:1, blurb:'A retired hearse. Free. Breaks down constantly. Extremely punk, so cred starts high.'},
   {id:'sprinter',name:'Stolen Sprinter',the:'the Sprinter',cost:250, bd:.10, wear:1.0, gas:1.1, comfort:.35,  rel:3, cmf:3, blurb:'Bought off a guy named Deke. No paperwork. The cops are curious.'},
-  {id:'bus',     name:'Church Bus',  the:'the church bus',     cost:500, bd:.04, wear:.7,  gas:1.5, comfort:.7, rel:5, cmf:5, blurb:'Reliable and roomy, so fewer fights. Drinks gas. Not remotely punk.'}
+  {id:'bus',     name:'Church Bus',  the:'the church bus',     cost:500, bd:.04, wear:.7,  gas:1.5, comfort:.7, rel:5, cmf:5, blurb:'Reliable and roomy, so fewer fights. Drinks gas. Not remotely punk.'},
+  {id:'icecream',name:'Ice Cream Truck',the:'the ice cream truck',cost:350, bd:.08, wear:1.0, gas:1.2, comfort:.15, rel:4, cmf:2, unlock:6500, blurb:'Still stocked. Sells cones outside every show. The jingle does not turn off. Ever.'}
 ];
 const TOWNS = [
   {name:'Rust Falls',      venue:'The Sticky Floor',        t:7,  cap:40,  x:.15,y:.22},
@@ -387,6 +424,15 @@ const TOWNS = [
   {name:'Tetanus Springs', venue:'The Abattoir',            t:8,  cap:90,  x:.16,y:.76},
   {name:'Dullsville',      venue:'Dullsville Civic Ballroom',t:4, cap:110, x:.1, y:.5}
 ];
+// Unlockable towns. A tour swaps up to three of them into the loop in place of the usual stops.
+const EXTRA_TOWNS = [
+  {name:'Lake Disappointment', venue:'A Pontoon Boat (Moving)',     t:6, cap:45,  unlock:2000},
+  {name:'Fort Dysentery',      venue:'The Elks Lodge Steam Room',   t:5, cap:85,  unlock:2000},
+  {name:'New Chlamydia',       venue:'Free Clinic Parking Lot',     t:9, cap:100, unlock:13000},
+  {name:'Purgatory Heights',   venue:"St. Agatha's Bingo Night",    t:3, cap:140, unlock:13000},
+  {name:'Sphincter Falls',     venue:'Laser Tag Arena B',           t:8, cap:130, unlock:22000},
+  {name:'Beige Rapids',        venue:'A Wedding (Uninvited)',       t:4, cap:160, unlock:22000}
+];
 const CHEM = [
   {a:'spit', b:'vex',    coh:-1,   text:'{spit} and {vex} used to date. The tension sold tickets and ruined breakfasts.'},
   {a:'lord', b:'trevor', coh:-1.5, text:'{lord} and {trevor} each believed they were the frontman.'},
@@ -395,7 +441,11 @@ const CHEM = [
   {a:'rat',  b:'gus',    coh:1,    text:'{rat} and {gus} were best friends, which was good for morale and bad for property.'},
   {a:'brenda',b:'click', coh:.6,   text:'{brenda} and {click} ran the tour on time. It was eerie.'},
   {a:'marge',b:'spit',   coh:.5,   text:'{marge} kept {spit} away from every sound guy in the country.'},
-  {a:'stitches',b:'click',coh:-.6, text:'{stitches} kept trying to stage dive onto the drum machine.'}
+  {a:'stitches',b:'click',coh:-.6, text:'{stitches} kept trying to stage dive onto the drum machine.'},
+  {a:'karen',b:'bear',   coh:-.8,  text:'{karen} kept trying to report {bear} to somebody. There is nobody to report a bear to.'},
+  {a:'dad',  b:'mother', coh:.8,   text:'{mother} made {dad} call the kids every Sunday.'},
+  {a:'ghost',b:'marge',  coh:-.8,  text:'{marge} kept trying to exorcise {ghost} during load-in.'},
+  {a:'karen',b:'brenda', coh:.6,   text:'{karen} and {brenda} co-wrote the complaint letters. Every venue paid in full.'}
 ];
 const RANKS = [[0,'Played to the Bartender'],[200,'Garage Rumor'],[600,'Local Nuisance'],[1300,'Scene Staple'],[2500,'Regional Menace'],[4500,'Cult Legends'],[8000,'Ruined by Success']];
 function rankFor(f){let r=RANKS[0][1];for(const [n,l] of RANKS)if(f>=n)r=l;return r}
@@ -410,6 +460,14 @@ function newGame(cfg, seed){
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const members = ROLES.map(r=>Object.assign({}, CAST[r].find(m=>m.id===cfg.lineup[r]), {role:r, hurt:0}));
   const van = VANS.find(v=>v.id===cfg.van);
+  // The loop of towns for this tour: the usual eight, with up to three unlocked towns swapped in.
+  const route = TOWNS.map(t=>Object.assign({},t));
+  { const extra=EXTRA_TOWNS.filter(t=>(cfg.towns||[]).includes(t.name));
+    if(extra.length){
+      const shuf=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+      const slots=shuf(route.map((_,i)=>i));
+      shuf(extra).slice(0,3).forEach((t,i)=>Object.assign(route[slots[i]],{name:t.name,venue:t.venue,t:t.t,cap:t.cap}));
+    } }
   const merch = Math.min(1, cfg.merch/1000), agg = cfg.agg;
   const VThe = van.the[0].toUpperCase()+van.the.slice(1);
   const has = id=>members.some(m=>m.id===id);
@@ -418,11 +476,11 @@ function newGame(cfg, seed){
   const top = k=>members.slice().sort((a,b)=>b[k]-a[k])[0];
   const chem = ()=>CHEM.filter(c=>has(c.a)&&has(c.b));
   const chemOn = (a,b)=>has(a)&&has(b);
-  const two = ()=>{const p=members.filter(m=>m.id!=='click');const a=pick(p);let b=pick(p);while(b===a)b=pick(p);return [a,b]};
+  const two = ()=>{const p=members.filter(m=>m.id!=='click'&&m.id!=='ghost');const a=pick(p);let b=pick(p);while(b===a)b=pick(p);return [a,b]};
 
-  const S = {fans:0, cash:BUDGET-setupCost(cfg), van:100, coh:75, cred:van.id==='coffin'?62:van.id==='bus'?42:50, fatigue:0, stop:0, lap:1, town:0,
+  const S = {fans:0, cash:BUDGET-setupCost(cfg), van:100, coh:75, cred:van.id==='coffin'?62:van.id==='bus'?42:van.id==='icecream'?55:50, fatigue:0, stop:0, lap:1, town:0,
              phase:'travel', lastMotel:-9, lastPress:-9, pawned:false, over:false, end:null, clickWet:false};
-  const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null};
+  const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null, pairs:{}, tour:[]};
   const blame = {};
   const used = {};
   const dil = {first:3+Math.floor(R()*3), second:9+Math.floor(R()*3), done:0, pending:null, seen:{}};
@@ -447,14 +505,15 @@ function newGame(cfg, seed){
 
   // ---- travel ------------------------------------------------------------
   function travel(){
-    S.stop++; const from=S.town; S.town=(S.town+1)%TOWNS.length;
+    S.stop++; const from=S.town; S.town=(S.town+1)%route.length;
     const newLap = S.town===0; if(newLap) S.lap++;
-    const gas = Math.round((22+14*S.lap)*van.gas + 12+6*S.lap); // gas + food
+    const gas = Math.round((22+14*S.lap)*van.gas*(has('dad')?.6:1) + 12+6*S.lap); // gas + food
     const wear = rnd(3,8)*van.wear*(has('dale')?.75:1);
     const fame = 1.7*Math.log10(1+S.fans/150);
     let drain = 1.5 + .7*(avg('e')-2) + 1.1*(S.lap-1) + fame - van.comfort + S.fatigue*.12;
     chem().forEach(c=>drain-=c.coh);
     if(has('trevor')&&agg>=7) drain+=1.2;
+    if(van.id==='icecream') drain+=.6; // the jingle
     drain=Math.max(.5,drain);
     S.fatigue+=.5;
     const d=apply({cash:-gas,van:-wear,coh:-drain}, fame>1.6?'success':'road');
@@ -482,6 +541,7 @@ function newGame(cfg, seed){
     {id:'fight', rep:true, w:()=>.5+Math.max(0,avg('e')-1.5)*.7+(S.coh<40?.8:0), f:()=>{
       const [a,b]=two(); stats.fights++;
       const topic=pick(['the aux cord','who finished the hummus','the setlist order','a parking spot from 2019','whether ska counts','who is "the face" of the band','a borrowed phone charger','the correct way to load the van']);
+      const pk=[a.name,b.name].sort().join('|'), pr=stats.pairs[pk]||(stats.pairs[pk]={a:a.name,b:b.name,n:0}); pr.n++; pr.topic=topic;
       const calm=has('marge'); const hit=rnd(6,12)*(calm?.5:1);
       return ev('FIST FIGHT',`${a.name} and ${b.name} come to blows over ${topic}.${calm?' {marge} ends it with a look.':''}`,{coh:-hit},'ego')}},
     {id:'hymn', w:()=>van.id==='bus'?2.5:0, f:()=>ev('HYMNALS','A box of hymnals turns up under a seat. The singalong is sincere and deeply alarming.',{coh:5,cred:-2})},
@@ -503,6 +563,16 @@ function newGame(cfg, seed){
     {id:'heater', w:()=>has('rat')?2:0, f:()=>ev('COAT HANGER','{rat} fixes the heater with a fork. The heater is now permanently on.',{van:10,fatigue:1})},
     {id:'hype', w:()=>S.fans>1500?2.5:0, f:()=>ev('NEXT BIG THING','A blog calls you "the next big thing". The van gets very, very quiet.',{coh:-7,fans:bump(.05)},'success')},
     {id:'pod', w:()=>S.fans>500?2:0, f:()=>ev('"MY BAND"',`${top('e').name} does a podcast interview alone and says "my band" eleven times.`,{coh:-6,fans:bump(.03)},'success')},
+    {id:'manager', w:()=>has('karen')?2.5:0, f:()=>ev('THE MANAGER','{karen} asks to speak to the venue\'s manager. Then the manager\'s manager. You leave with a refund for something you never bought.',{cash:90,cred:-3})},
+    {id:'review', w:()=>has('karen')?2:0, f:()=>ev('ONE STAR','{karen} reviews last night\'s crowd online. One star. "Would not play for again."',{cred:4,coh:-3},'ego')},
+    {id:'exwife', w:()=>has('dad')?2.5:0, f:()=>ev('THE EX-WIFE','{dad}\'s ex-wife comes to the show with her new boyfriend, Chad. {dad} plays the set of a lifetime, directly at them.',{fans:bump(.05),coh:-3},'ego')},
+    {id:'solo', w:()=>has('dad')?2:0, f:()=>ev('DAD ROCK','{dad} sneaks a four-minute solo into the fast one. Three dads at the back lose their minds.',{cred:-3,fans:bump(.03)})},
+    {id:'cold', w:()=>has('ghost')?2:0, f:()=>ev('COLD SPOT','The van goes very cold. {ghost} is upset about something from 1987. Nobody can help.',{coh:-3},'road')},
+    {id:'haunt', w:()=>has('ghost')?2.5:0, f:()=>ev('HAUNTED MERCH','Word gets around that the merch table is haunted. It is. Sales triple.',{cash:90,cred:4})},
+    {id:'rider', w:()=>has('bear')?2.5:0, f:()=>ev('THE RIDER','{bear} eats the whole rider, the cooler, and part of the green room couch.',{cash:-60,coh:-2},'chaos')},
+    {id:'control', w:()=>has('bear')?2:0, f:()=>ev('ANIMAL CONTROL','Animal control turns up with questions. The band says {bear} is a very committed drummer in a costume. They buy it.',{cred:5,coh:3})},
+    {id:'jingle', w:()=>van.id==='icecream'?2.5:0, f:()=>ev('THE JINGLE','Hour nine of the jingle. Somebody goes looking for the speaker with a hammer. The jingle survives. It is slower now, and worse.',{coh:-5,van:-5},'van')},
+    {id:'cones', w:()=>van.id==='icecream'?2.5:0, f:()=>ev('RED LIGHT','A line of children forms at every red light. You are out of rocket pops by noon.',{cash:70,cred:-3})},
     {id:'exit', w:()=>1, f:()=>ev('WRONG EXIT','Ninety extra miles. Nobody will admit who was holding the map.',{cash:-25,coh:-3,van:-4},'road')},
     {id:'wash', w:()=>1, f:()=>ev('LAUNDRY DAY','Laundry day. Everybody smells like a person again.',{coh:5,cash:-15})}
   ];
@@ -562,7 +632,7 @@ function newGame(cfg, seed){
 
   // ---- the stretch of road between towns -----------------------------------
   function road(){
-    const town=TOWNS[S.town].name;
+    const town=route[S.town].name;
     if(S.van<=0){
       const cost=has('rat')?120:300;
       if(S.cash<cost && !S.pawned){ S.pawned=true; stats.breakdowns++;
@@ -610,15 +680,16 @@ function newGame(cfg, seed){
   };
   const TIER_LABEL = {disaster:'DISASTER',bad:'ROUGH',ok:'DECENT',good:'KILLER',legendary:'LEGENDARY'};
   function gig(){
-    const town=TOWNS[S.town];
+    const town=route[S.town];
     if(S.fatigue>12){
-      S.fatigue=4;
+      S.fatigue=4; stats.tour.push({town:town.name,venue:town.venue,tier:'cancelled',att:0,cap:0});
       return Object.assign(ev('VAN FLU',`Everybody has the van flu. The ${town.name} show is cancelled. The band lies very still.`,{coh:-3},'road'),{skip:true});
     }
     stats.gigs++;
     const cap=Math.round(town.cap*1.3*Math.pow(2,S.lap-1));
     let draw=4+cap*rnd(.12,.4)*(.5+S.cred/100)+S.fans*.22;
     if(has('vex')) draw*=1.1;
+    if(has('bear')) draw*=1.2;
     const att=Math.max(2,Math.round(Math.min(cap,draw)));
     const fit=1-Math.abs(agg-town.t)/9;
     const hurt=members.filter(m=>m.hurt>0);
@@ -632,20 +703,25 @@ function newGame(cfg, seed){
     let gain=att*.9*Math.pow(qq,1.6)+S.fans*.07*Math.pow(qq,1.5)*(S.cred/50);
     if(has('spit')) gain*=1.1;
     if(has('lord')) gain*=1.15;
+    if(has('karen')) gain*=1.1;
     if(has('stitches')&&agg>=6) gain*=1.15;
     if(chemOn('spit','vex')) gain*=1.1;
     if(tier==='legendary') gain*=1.8;
     const crowd=Math.pow(att,.6);
     let door=13*crowd*(tier==='disaster'?.3:1);
     let merchCash=crowd*(1+15*merch)*(.5+qq*.6)*(has('brenda')?1.25:1)*(chemOn('brenda','click')?1.1:1);
+    if(has('karen')) door*=1.25;
+    if(van.id==='icecream') merchCash+=crowd*4; // cones
     let coh={disaster:-5,bad:-2,ok:0,good:1.5,legendary:3}[tier];
     let cred=(agg-5)*.5+(tier==='legendary'?5:tier==='disaster'?-2:0);
+    if(has('ghost')) cred+=.5;
     if(merch>.6) cred-=(merch-.6)*2.5;
     if(has('click')) cred-=.6;
     let line=pick(GIG_TEXT[tier]).replace('{M}',pick(members).name), extra='';
     if(agg-town.t>=4 && chance(.28)){
-      door=0; gain*=.6; cred+=5;
-      extra=' The owner pulls the plug during song two. You finish it unplugged, screaming. No pay.';
+      gain*=.6; cred+=5;
+      if(has('karen')) extra=' The owner pulls the plug during song two. {karen} gets the door money anyway, and an apology.';
+      else { door=0; extra=' The owner pulls the plug during song two. You finish it unplugged, screaming. No pay.'; }
     } else if(has('spit')&&!has('marge')&&chance(.12)){
       door=0; cred+=4; coh-=3;
       extra=' {spit} fights the sound guy. The door money goes to the sound guy.';
@@ -653,7 +729,7 @@ function newGame(cfg, seed){
     if(agg>=7){
       const st=has('stitches');
       if(chance((agg-6)*.035*(st?2:1))){
-        const m=st?by('guitar'):pick(members.filter(x=>x.id!=='click'));
+        const m=st?by('guitar'):pick(members.filter(x=>x.id!=='click'&&x.id!=='ghost'));
         if(m&&m.hurt<=0){m.hurt=3; extra+=` ${m.name} breaks a finger on somebody's face.`;}
       }
     }
@@ -664,42 +740,70 @@ function newGame(cfg, seed){
     const d=apply({fans:gain,cash:Math.round(door+merchCash),coh,cred},'gig');
     extra=fill(extra);
     const rec={town:town.name,venue:town.venue,fans:gain,att,cap,line,tier};
+    stats.tour.push({town:town.name,venue:town.venue,tier,att,cap});
     if(!stats.best||gain>stats.best.fans) stats.best=rec;
     if(!stats.worst||q<stats.worst.q) stats.worst=Object.assign({q},rec);
     return {kind:'gig',town:town.name,venue:town.venue,att,cap,tier,label:TIER_LABEL[tier],q,text:line+extra,d};
   }
 
   // ---- endings ----------------------------------------------------------------
+  // Who walked, and why: the one-line cause of death plus the name of whoever quit.
   function cause(){
-    const town=TOWNS[S.town].name;
-    if(S.end&&S.end.reason==='stranded') return pick([
+    const town=route[S.town].name;
+    if(S.end&&S.end.reason==='stranded') return {who:null,text:pick([
       `Stranded in ${town} with a dead van and no money. ${VThe} is now a planter.`,
-      `${VThe} died in ${town}. Nobody could afford to bring it back. Everyone took the bus home, separately.`]);
-    const spec=[];
-    if(has('dale')) spec.push('{dale} got a real job. {dale} had the licence.');
-    if(has('mother')) spec.push('{mother} went home. Said it was a school night somewhere.');
-    if(has('click')) spec.push('{click} got wet one last time. There was no funeral.');
-    if(has('lord')) spec.push('{lord} ascended. (Went solo.)');
-    if(has('gus')) spec.push('{gus} chose the animals. There were fourteen by then.');
-    if(has('brenda')) spec.push('{brenda} ran the numbers and resigned, with two weeks\' notice.');
-    if(has('teen')) spec.push('Some Kid\'s mom came and picked them up.');
+      `${VThe} died in ${town}. Nobody could afford to bring it back. Everyone took the bus home, separately.`])};
+    const spec=[], sp=(id,text)=>{ const m=members.find(x=>x.id===id); if(m) spec.push({who:m.name,text:fill(text)}) };
+    sp('dale',`{dale} got a real job in ${town}. {dale} had the licence.`);
+    sp('mother',`{mother} went home from ${town}. Said it was a school night somewhere.`);
+    sp('click','{click} got wet one last time. There was no funeral.');
+    sp('lord',`{lord} ascended in ${town}. (Went solo.)`);
+    sp('gus','{gus} chose the animals. There were fourteen by then.');
+    sp('brenda','{brenda} ran the numbers and resigned, with two weeks\' notice.');
+    sp('karen','{karen} left the band a one-star review and moved on.');
+    sp('dad','{dad} got back together with the ex-wife. The guitar is for sale.');
+    sp('ghost',`{ghost} finally moved on in ${town}. Unfinished business, finished.`);
+    sp('bear','{bear} went back to the woods to hibernate. No hard feelings. Some hard bites.');
+    sp('teen','Some Kid\'s mom came and picked them up.');
     if(spec.length&&chance(.35)) return pick(spec);
     const tag=Object.keys(blame).sort((a,b)=>blame[b]-blame[a])[0]||'road';
+    const low=k=>members.slice().sort((a,b)=>a[k]-b[k])[0];
+    const Q=(({ego:top('e'),success:top('e'),chaos:top('c'),road:low('s'),van:low('s'),money:low('c'),gig:top('t')})[tag]||top('e')).name;
     const P={
-      ego:[`${top('e').name} went solo. The solo record is about the rest of you.`,'Creative differences (a chair).','An argument over whose name goes biggest on the flyer. There was one flyer.'],
-      van:['Eleven hours on a highway shoulder will end anything.',`${VThe} broke the band before the band could break it.`],
-      money:['You split the last four dollars four ways. Nobody felt good about it.','Irreconcilable financial differences ($38).'],
-      chaos:[`${top('c').name} traded the band's future for something in a parking lot.`,'Too many incidents. A lawyer would call it "a pattern".'],
-      road:['Nobody could face one more gas station burrito.','Everybody simply went home, and nobody brought it up again.'],
-      success:['Ruined by success: a label offered a deal to exactly one of you.','People started liking you. The band could not survive it.',`Fame went straight to ${top('e').name}'s head. It was a short trip.`],
-      gig:['One bad show too many. Somebody believed the heckler.','The band broke up on stage, mid-song, to light applause.']
+      ego:[`${Q} went solo in ${town}. The solo record is about the rest of you.`,`Creative differences in ${town}: ${Q}, and a chair.`,`${Q} quit over whose name goes biggest on the flyer. There was one flyer.`],
+      van:[`${Q} got out of ${van.the} on a highway shoulder near ${town} and just kept walking.`,`${VThe} broke ${Q} before the band could break it.`],
+      money:[`You split the last four dollars four ways in ${town}. ${Q} took a share and left.`,`Irreconcilable financial differences ($38). ${Q} wants it in writing.`],
+      chaos:[`${Q} traded the band's future for something in a parking lot in ${town}.`,`Too many incidents. ${Q}'s lawyer calls it "a pattern".`],
+      road:[`${Q} could not face one more gas station burrito and caught a bus home from ${town}.`,`${Q} went out for cigarettes in ${town}. That was the tour.`],
+      success:[`Ruined by success: a label offered a deal to ${Q}, and only ${Q}.`,`People started liking you. ${Q} could not survive it.`,`Fame went straight to ${Q}'s head. It was a short trip.`],
+      gig:[`One bad show too many. ${Q} believed the heckler in ${town}.`,`${Q} quit on stage in ${town}, mid-song, to light applause.`]
     };
-    return pick(P[tag]||P.road);
+    return {who:Q,text:pick(P[tag]||P.road)};
+  }
+  // A few sentences about this particular band's last days, built from what actually happened.
+  function story(who){
+    const out=[], w=stats.worst, b=stats.best;
+    const pr=Object.values(stats.pairs).sort((x,y)=>y.n-x.n)[0];
+    if(pr) out.push(pr.n>1?`${pr.a} and ${pr.b} came to blows ${pr.n} times. The last one was about ${pr.topic}.`
+                          :`${pr.a} and ${pr.b} never got past the fight about ${pr.topic}.`);
+    if(w&&stats.gigs>1&&(w.tier==='disaster'||w.tier==='bad')) out.push(`The low point was ${w.venue} in ${w.town}. ${w.line}`);
+    if(stats.breakdowns>=3) out.push(`${VThe} broke down ${stats.breakdowns} times and is remembered less fondly than the band.`);
+    else if(b&&(b.tier==='good'||b.tier==='legendary')) out.push(`For one night at ${b.venue} in ${b.town}, this was the best band in the world.`);
+    const rest=members.filter(m=>m.name!==who).map(m=>m.name);
+    for(let i=rest.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [rest[i],rest[j]]=[rest[j],rest[i]]; }
+    const [x,y,z]=rest;
+    out.push(pick([
+      `${x} kept ${van.the}. ${y} kept the name. Neither is worth anything.`,
+      `${x} and ${y} still talk. ${z} has been blocked.`,
+      `${x} still wears the shirt. ${y} says it was never really a band.`,
+      `${x} and ${y} have already started a new band. It is the same band.`]));
+    return out;
   }
   function endBeat(){
     S.over=true; if(!S.end) S.end={reason:'breakup'};
-    S.end.cause=fill(cause()); S.end.town=TOWNS[S.town].name;
-    return {kind:'end',reason:S.end.reason,cause:S.end.cause,town:S.end.town};
+    const c=cause();
+    S.end.cause=fill(c.text); S.end.who=c.who; S.end.town=route[S.town].name; S.end.story=story(c.who);
+    return {kind:'end',reason:S.end.reason,cause:S.end.cause,town:S.end.town,who:c.who,story:S.end.story};
   }
 
   // ---- beat machine -----------------------------------------------------------
@@ -717,7 +821,7 @@ function newGame(cfg, seed){
     return gig();
   }
   function choose(i){ const dm=dil.pending; dil.pending=null; return resolve(dm,i); }
-  return {S, stats, members, van, next, choose, chem, rank:()=>rankFor(Math.round(S.fans))};
+  return {S, stats, members, van, towns:route, next, choose, chem, rank:()=>rankFor(Math.round(S.fans))};
 }
 /*ENGINE-END*/
 
@@ -747,18 +851,38 @@ const DEFAULT={lineup:{vocals:'brenda',guitar:'rat',bass:'dale',drums:'gus'},van
 let cfg=Object.assign({},DEFAULT,store.get('cfg',{}));
 cfg.lineup=Object.assign({},DEFAULT.lineup,cfg.lineup);
 if(!cfg.name) cfg.name=randName();
+// ---- unlocks: lifetime fans across every tour open up new members, a van and towns ----
+if(store.get('life',null)==null) store.set('life',store.get('hall',[]).reduce((a,h)=>a+(h.fans||0),0));
+const lifeFans=()=>store.get('life',0)||0;
+const avail=x=>!x.unlock||lifeFans()>=x.unlock;
+const TEASE={vocals:'a new singer',guitar:'a new guitarist',bass:'a new bassist',drums:'a new drummer'};
+const UNLOCKS=[
+  ...ROLES.flatMap(r=>CAST[r].filter(m=>m.unlock).map(m=>({at:m.unlock,tease:TEASE[r],what:()=>`${m.name} turns up to audition on ${r}.`}))),
+  ...VANS.filter(v=>v.unlock).map(v=>({at:v.unlock,tease:'a fourth van',what:()=>`The ${v.name} is for sale.`})),
+  ...[...new Set(EXTRA_TOWNS.map(t=>t.unlock))].map(at=>({at,tease:'two new towns',what:()=>`New towns on the circuit: ${EXTRA_TOWNS.filter(t=>t.unlock===at).map(t=>t.name).join(' and ')}.`}))
+].sort((a,b)=>a.at-b.at);
+for(const r of ROLES){ const m=CAST[r].find(m=>m.id===cfg.lineup[r]); if(!m||!avail(m)) cfg.lineup[r]=DEFAULT.lineup[r]; }
+{ const v=VANS.find(v=>v.id===cfg.van); if(!v||!avail(v)) cfg.van=DEFAULT.van; }
 const AGG_LAB=['','Radio-friendly','Dad-approved','Polite','Peppy','Scrappy','Loud','Feral','Hostile','Unlistenable','Noise complaint'];
 const pips=(n,max=5)=>'■'.repeat(Math.round(n))+'□'.repeat(max-Math.round(n));
 
 function renderSetup(){
   $('lineup').innerHTML=ROLES.map(r=>{
-    const sel=CAST[r].find(m=>m.id===cfg.lineup[r]);
-    return `<div class="role">${r}</div><div class="row">`+CAST[r].map(m=>
+    const sel=CAST[r].find(m=>m.id===cfg.lineup[r]), list=CAST[r].filter(avail), lock=CAST[r].find(m=>!avail(m));
+    return `<div class="role">${r}</div><div class="row${list.length>3?' four':''}">`+list.map(m=>
       `<button class="card${m===sel?' on':''}" data-role="${r}" data-id="${m.id}"><b>${m.name}</b><span class="cost">${m.cost?money(m.cost):'FREE'}</span>
        <div class="st"><em>TAL</em>${pips(m.t)}</div><div class="st"><em>CHA</em>${pips(m.c)}</div><div class="st"><em>EGO</em>${pips(m.e)}</div><div class="st"><em>STA</em>${pips(m.s)}</div></button>`).join('')
-      +`</div><p class="blurb">${sel.blurb}</p>`;
+      +`</div><p class="blurb">${sel.blurb}</p>`
+      +(lock?`<p class="lock">LOCKED: ${TEASE[r]} auditions at ${lock.unlock.toLocaleString()} lifetime fans</p>`:'');
   }).join('');
-  $('vans').innerHTML=VANS.map(v=>`<button class="card${v.id===cfg.van?' on':''}" data-van="${v.id}"><b>${v.name}</b><span class="cost">${v.cost?money(v.cost):'FREE'}</span>
+  const vlist=VANS.filter(avail), vlock=VANS.find(v=>!avail(v));
+  $('vans').className='row'+(vlist.length>3?' four':'');
+  $('vanLock').hidden=!vlock; if(vlock) $('vanLock').textContent=`LOCKED: a fourth van goes on sale at ${vlock.unlock.toLocaleString()} lifetime fans`;
+  { const life=lifeFans(), nxt=UNLOCKS.find(u=>u.at>life), prev=UNLOCKS.filter(u=>u.at<=life).pop(), base=prev?prev.at:0;
+    $('lifeN').textContent=life.toLocaleString();
+    $('lifeBar').style.width=(nxt?Math.max(3,100*(life-base)/(nxt.at-base)):100)+'%';
+    $('lifeNext').textContent=nxt?`Next unlock at ${nxt.at.toLocaleString()}: ${nxt.tease}`:'Everything is unlocked.'; }
+  $('vans').innerHTML=vlist.map(v=>`<button class="card${v.id===cfg.van?' on':''}" data-van="${v.id}"><b>${v.name}</b><span class="cost">${v.cost?money(v.cost):'FREE'}</span>
      <div class="st"><em>RUN</em>${pips(v.rel)}</div><div class="st"><em>ROOM</em> ${pips(v.cmf)}</div></button>`).join('');
   $('vanBlurb').textContent=VANS.find(v=>v.id===cfg.van).blurb;
   $('agg').value=cfg.agg; $('aggVal').textContent=cfg.agg+'/10';
@@ -971,7 +1095,7 @@ const INK='#141210', PINK='#ff2e7e', PAPER='#ebe6d6';
 const BEND=[.16,-.12,.14,-.1,.15,-.13,.1,-.16];
 let G=null, scene='map', trav=null, gigAnim=null, puffs=[];
 function seg(i){ // curved road from town i to i+1
-  const a=TOWNS[i], b=TOWNS[(i+1)%TOWNS.length];
+  const a=G.towns[i], b=G.towns[(i+1)%G.towns.length];
   const ax=a.x*W, ay=a.y*H, bx=b.x*W, by=b.y*H, mx=(ax+bx)/2, my=(ay+by)/2, k=BEND[i];
   return {ax,ay,bx,by,cx:mx-(by-ay)*k,cy:my+(bx-ax)*k};
 }
@@ -980,6 +1104,13 @@ function drawVan(x,y,dir,moving){
   const id=G.van.id, j=moving?Math.sin(clock/55)*1.3:0;
   ctx.save(); ctx.translate(x,y-9+j); ctx.scale(dir,1);
   ctx.lineWidth=2; ctx.strokeStyle=INK;
+  if(id==='icecream'){ // white box truck, pink awning, a cone on the roof
+    ctx.fillStyle='#f7f3e6'; ctx.beginPath(); ctx.moveTo(-18,6);ctx.lineTo(-18,-10);ctx.lineTo(7,-10);ctx.lineTo(7,-5);ctx.lineTo(13,-5);ctx.lineTo(17,0);ctx.lineTo(17,6); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=PINK; ctx.fillRect(-15,-7,19,4); ctx.fillStyle=INK; ctx.fillRect(9,-3,5,3);
+    ctx.fillStyle=PINK; ctx.beginPath(); ctx.arc(-6,-14,3.5,0,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=INK; for(const wx of[-10,10]){ctx.beginPath();ctx.arc(wx,7,4,0,7);ctx.fill();ctx.fillStyle=PAPER;ctx.beginPath();ctx.arc(wx,7,1.5,0,7);ctx.fill();ctx.fillStyle=INK}
+    ctx.restore(); return;
+  }
   ctx.fillStyle=id==='coffin'?INK:id==='bus'?'#f7f3e6':'#9b978c';
   ctx.beginPath();
   if(id==='coffin'){ ctx.moveTo(-17,6);ctx.lineTo(-17,-5);ctx.lineTo(4,-6);ctx.lineTo(10,-1);ctx.lineTo(17,0);ctx.lineTo(17,6); }
@@ -1045,7 +1176,7 @@ function drawRegion(){
   ctx.restore(); ctx.textBaseline='alphabetic';
 }
 function drawMap(){
-  const n=TOWNS.length, fs=Math.max(9,Math.min(11.5,W/32));
+  const n=G.towns.length, fs=Math.max(9,Math.min(11.5,W/32));
   drawRegion();
   // roads
   for(let i=0;i<n;i++){
@@ -1060,7 +1191,7 @@ function drawMap(){
   ctx.fillText(G.S.lap===1?'':'LAP '+G.S.lap,0,0); ctx.restore();
   // towns
   ctx.font=`700 ${fs}px "Courier New",monospace`;
-  TOWNS.forEach((t,i)=>{
+  G.towns.forEach((t,i)=>{
     const x=t.x*W,y=t.y*H, here=i===G.S.town&&!trav;
     ctx.lineWidth=3; ctx.strokeStyle=INK;
     ctx.beginPath();ctx.moveTo(x-5,y-5);ctx.lineTo(x+5,y+5);ctx.moveTo(x+5,y-5);ctx.lineTo(x-5,y+5);ctx.stroke();
@@ -1077,7 +1208,7 @@ function drawMap(){
     const t=Math.min(1,(clock-trav.start)/trav.dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, s=seg(trav.from);
     p=bez(s,e); const p2=bez(s,Math.min(1,e+.02)); dir=p2.x>=p.x?1:-1; moving=t<1;
     if(moving&&Math.random()<.3) puffs.push({x:p.x-dir*18,y:p.y-4,born:clock});
-  } else { const t=TOWNS[G.S.town]; p={x:t.x*W,y:t.y*H}; }
+  } else { const t=G.towns[G.S.town]; p={x:t.x*W,y:t.y*H}; }
   puffs=puffs.filter(f=>clock-f.born<700);
   for(const f of puffs){const a=(clock-f.born)/700;ctx.fillStyle=`rgba(20,18,16,${.35*(1-a)})`;ctx.beginPath();ctx.arc(f.x,f.y-a*10,2+a*5,0,7);ctx.fill()}
   drawVan(p.x,p.y,dir,moving);
@@ -1182,7 +1313,7 @@ let lastRegion=-1;
 async function startTour(){
   const my=++runId;
   audio();
-  G=newGame(cfg,(Math.random()*2**32)>>>0);
+  G=newGame(Object.assign({},cfg,{towns:EXTRA_TOWNS.filter(avail).map(t=>t.name)}),(Math.random()*2**32)>>>0);
   G.cfg=Object.assign({},cfg,{lineup:Object.assign({},cfg.lineup)});
   let ri; do{ ri=Math.random()*REGIONS.length|0 }while(REGIONS.length>1&&ri===lastRegion); lastRegion=ri;
   G.region=Object.assign({rot:(Math.random()-.5)*.16},REGIONS[ri]);
@@ -1241,7 +1372,7 @@ function toSetup(){ runId++; running=false; waiters=[]; stopClips(); rollNames()
 $('quit').addEventListener('click',toSetup);
 
 // ---- obituary -------------------------------------------------------------------
-let lastShare='';
+let lastShare='', posterData=null, posterBlob=null;
 function obituary(b){
   running=false;
   const S=G.S, st=G.stats, fans=Math.round(S.fans), key=cfg.manual?'best.manual':'best.auto', prev=store.get(key,0);
@@ -1253,6 +1384,8 @@ function obituary(b){
   $('ofans').textContent=fans.toLocaleString();
   $('orank').textContent=G.rank();
   $('ocause').textContent=b.cause;
+  const os=$('ostory'); os.innerHTML=''; for(const s of b.story||[]){ const p=document.createElement('p'); p.textContent=s; os.append(p); }
+  $('ostoryWrap').hidden=!(b.story&&b.story.length);
   $('ostats').innerHTML=[[st.gigs,'gigs'],[S.lap,S.lap===1?'lap':'laps'],[st.breakdowns,'break-downs'],[st.fights,'fist fights']].map(([n,l])=>`<div><b>${n}</b>${l}</div>`).join('');
   const g=x=>x?`<b>${x.town}, ${x.venue}</b> (${x.att}/${x.cap}, +${x.fans} fans). ${x.line}`:'There were no nights.';
   $('obestgig').innerHTML=g(st.best); $('oworstgig').innerHTML=g(st.worst);
@@ -1260,13 +1393,131 @@ function obituary(b){
   if(st.kicked) ch.push(`${st.kicked} is still at that rest stop, as far as anyone knows.`);
   $('ochemWrap').hidden=!ch.length; $('ochem').innerHTML=ch.join('<br>');
   $('obest').textContent=fans>prev&&prev>0?`NEW RECORD (was ${prev.toLocaleString()})`:fans>prev?'FIRST TOUR ON THE BOOKS':`Your record: ${prev.toLocaleString()} fans`;
-  lastShare=`THE PITS — ${cfg.name||'My band'} made ${fans.toLocaleString()} fans in ${st.gigs} gigs before the breakup. Rank: ${G.rank()}. Cause of death: ${b.cause}`;
+  // lifetime fans, and anything they just unlocked
+  const before=lifeFans(), after=before+fans; store.set('life',after);
+  const got=UNLOCKS.filter(u=>u.at>before&&u.at<=after), nxt=UNLOCKS.find(u=>u.at>after), ou=$('ounlock');
+  ou.className=got.length?'new':''; ou.innerHTML='';
+  if(got.length){ const h=document.createElement('b'); h.textContent='UNLOCKED'; ou.append(h); for(const u of got){ const d=document.createElement('div'); d.textContent=u.what(); ou.append(d); } }
+  else ou.textContent=nxt?`${(nxt.at-after).toLocaleString()} more lifetime fans to unlock ${nxt.tease}.`:'Everything is unlocked. Nothing left but the music.';
+  lastShare=`THE PITS — ${cfg.name||'My band'} made ${fans.toLocaleString()} fans in ${st.gigs} gigs before the breakup. Rank: ${G.rank()}. Cause of death: ${b.cause} https://kevinguyer.github.io/the-pits/`;
+  posterBlob=null;
+  posterData={name:cfg.name||'Unnamed Band',fans,rank:G.rank(),cause:b.cause,members:G.members.map(m=>m.name),tour:st.tour.slice(),
+              gigs:st.gigs,laps:S.lap,breakdowns:st.breakdowns,fights:st.fights};
   show('obit'); $('obit').scrollTop=0;
 }
 $('again').addEventListener('click',()=>startTour());
 $('newband').addEventListener('click',toSetup);
-$('share').addEventListener('click',async()=>{
-  try{ if(navigator.share) await navigator.share({text:lastShare}); else { await navigator.clipboard.writeText(lastShare); $('share').textContent='COPIED'; setTimeout(()=>$('share').textContent='SHARE',1400); } }catch(e){}
+
+// ---- tour poster: the obituary as a gig flyer, drawn to an image people can share -----------
+const HEADF='Impact,Anton,Haettenschweiler,"Arial Narrow Bold","Arial Black",sans-serif', MONOF='"Courier New",Courier,monospace',
+      PENF='"Permanent Marker","Segoe Print","Marker Felt",cursive';
+function fitFont(x,text,weight,fam,max,maxW){ let s=max; for(;;){ x.font=`${weight} ${s}px ${fam}`; if(s<=12||x.measureText(text).width<=maxW) return s; s-=2; } }
+function wrapText(x,text,maxW){ const out=[]; let line=''; for(const w of String(text).split(/\s+/)){ const t=line?line+' '+w:w; if(line&&x.measureText(t).width>maxW){ out.push(line); line=w } else line=t } if(line) out.push(line); return out; }
+const NIGHT={disaster:'DISASTER',bad:'ROUGH',ok:'DECENT',good:'KILLER',legendary:'LEGENDARY',cancelled:'CANCELLED'};
+async function drawPoster(P){
+  const Wp=1080, Hp=1350, c=document.createElement('canvas'); c.width=Wp; c.height=Hp;
+  const x=c.getContext('2d');
+  try{ await Promise.all([document.fonts.load('40px "Permanent Marker"'),document.fonts.load('40px Anton')]) }catch(e){}
+  x.fillStyle=PAPER; x.fillRect(0,0,Wp,Hp);
+  for(let i=0;i<9000;i++){ x.fillStyle=`rgba(20,18,16,${Math.random()*.06})`; x.fillRect(Math.random()*Wp,Math.random()*Hp,2+Math.random()*2,2); }
+  x.strokeStyle=INK; x.lineWidth=10; x.strokeRect(28,28,Wp-56,Hp-56); x.lineWidth=3; x.strokeRect(46,46,Wp-92,Hp-92);
+  x.fillStyle=INK; x.textAlign='center'; x.textBaseline='alphabetic';
+  x.font=`700 22px ${MONOF}`; x.fillText('NO REFUNDS  ·  NO ENCORES  ·  NO SURVIVORS',Wp/2,92);
+  // the van
+  const im=$('splashImg');
+  if(im.complete&&im.naturalWidth){ x.save(); x.translate(Wp/2,300); x.rotate(-.035); x.globalCompositeOperation='multiply'; x.drawImage(im,-205,-205,410,410); x.restore(); }
+  else { x.font=`400 150px ${HEADF}`; x.fillStyle=PINK; x.fillText('THE PITS',Wp/2+6,356); x.fillStyle=INK; x.fillText('THE PITS',Wp/2,350); }
+  // band name, one or two lines
+  const nm=P.name.toUpperCase(); let lines=[nm];
+  x.font=`400 150px ${HEADF}`;
+  if(x.measureText(nm).width>940&&nm.includes(' ')){
+    const sp=[...nm].map((ch,i)=>ch===' '?i:-1).filter(i=>i>0).sort((a,b)=>Math.abs(a-nm.length/2)-Math.abs(b-nm.length/2))[0];
+    lines=[nm.slice(0,sp),nm.slice(sp+1)];
+  }
+  x.save(); x.translate(Wp/2,600); x.rotate(-.03);
+  lines.forEach((ln,i)=>{
+    const one=lines.length===1; fitFont(x,ln,'400',HEADF,one?168:112,930);
+    const y=one?28:(i?86:-22);
+    x.fillStyle=PINK; x.fillText(ln,7,y+6); x.fillStyle=INK; x.fillText(ln,0,y);
+  });
+  x.restore();
+  x.save(); x.translate(Wp/2,728); x.rotate(.012);
+  x.fillStyle=INK; x.fillRect(-330,-23,660,46);
+  x.fillStyle=PAPER; x.font=`700 24px ${MONOF}`; x.fillText('T H E   F A R E W E L L   T O U R',0,8);
+  x.restore();
+  // left: the score
+  x.textAlign='left';
+  const fs=String(P.fans.toLocaleString());
+  fitFont(x,fs,'400',HEADF,150,430);
+  x.fillStyle=PINK; x.fillText(fs,87,912); x.fillStyle=INK; x.fillText(fs,80,906);
+  x.font=`700 24px ${MONOF}`; x.fillText('FANS GAINED',82,940);
+  const rk=P.rank.toUpperCase(); const rs=fitFont(x,rk,'400',HEADF,42,400), rw=x.measureText(rk).width+32;
+  x.save(); x.translate(80,990); x.rotate(-.05);
+  x.fillStyle=INK; x.fillRect(6,-24,rw,58); x.fillStyle=PINK; x.fillRect(0,-30,rw,58);
+  x.fillStyle=INK; x.fillText(rk,16,-1+rs*.36); x.restore();
+  x.font=`700 19px ${MONOF}`; x.fillStyle=INK;
+  x.fillText(`${P.gigs} GIGS  ·  ${P.laps} ${P.laps===1?'LAP':'LAPS'}`,82,1052);
+  x.fillText(`${P.breakdowns} BREAKDOWNS  ·  ${P.fights} ${P.fights===1?'FIGHT':'FIGHTS'}`,82,1078);
+  // right: the last few dates
+  const X0=560, X1=1000, show=P.tour.slice(-5), more=P.tour.length-show.length;
+  x.font=`400 34px ${HEADF}`; x.fillText('TOUR DATES',X0,806); x.fillRect(X0,814,X1-X0,4);
+  show.forEach((n,i)=>{
+    const y=852+i*47, tag=n.tier!=='cancelled'&&n.att>=n.cap?'SOLD OUT':NIGHT[n.tier]||'';
+    x.textAlign='right'; x.font=`400 22px ${PENF}`; x.fillStyle=PINK; x.fillText(tag,X1,y);
+    const tw=x.measureText(tag).width;
+    x.textAlign='left'; x.fillStyle=INK; fitFont(x,n.town.toUpperCase(),'400',HEADF,28,X1-X0-tw-14); x.fillText(n.town.toUpperCase(),X0,y);
+    fitFont(x,n.venue,'700',MONOF,15,X1-X0); x.fillStyle='#6b665a'; x.fillText(n.venue,X0,y+18);
+  });
+  x.fillStyle=INK; x.font=`700 17px ${MONOF}`;
+  if(!show.length) x.fillText('NONE. NOT ONE.',X0,852);
+  else if(more>0) x.fillText(`+ ${more} EARLIER ${more===1?'NIGHT':'NIGHTS'}`,X0,852+show.length*47);
+  // cause of death
+  x.font=`700 26px ${MONOF}`; let cl=wrapText(x,P.cause,900), lh=32;
+  if(cl.length>3){ x.font=`700 21px ${MONOF}`; cl=wrapText(x,P.cause,900); lh=27; }
+  const cy=1104, chh=48+cl.length*lh+8;
+  x.save(); x.translate(Wp/2,cy); x.rotate(-.006);
+  x.fillStyle=INK; x.fillRect(-480,0,960,chh);
+  x.fillStyle=PINK; const body=x.font; x.font=`700 18px ${MONOF}`; x.fillText('CAUSE OF DEATH',-456,30);
+  x.fillStyle=PAPER; x.font=body; cl.forEach((ln,i)=>x.fillText(ln,-456,62+i*lh));
+  x.restore();
+  // who was in it
+  x.textAlign='center'; x.fillStyle=INK;
+  const who=P.members.join('  /  '); fitFont(x,who,'400',PENF,26,930); x.fillText(who,Wp/2,Math.min(1296,cy+chh+36));
+  x.font=`700 20px ${MONOF}`; const url='kevinguyer.github.io/the-pits', uw=x.measureText(url).width+28;
+  x.fillStyle=PAPER; x.fillRect(Wp/2-uw/2,Hp-52,uw,40); x.fillStyle=INK; x.fillText(url,Wp/2,Hp-24);
+  // tape
+  x.fillStyle='rgba(255,46,126,.85)';
+  for(const [tx,ty,r] of [[58,52,-.6],[Wp-58,52,.55]]){ x.save(); x.translate(tx,ty); x.rotate(r); x.fillRect(-85,-20,170,40); x.restore(); }
+  return c;
+}
+async function openPoster(){
+  if(!posterData) return;
+  $('poster').hidden=false;
+  if(!posterBlob){
+    $('posterImg').removeAttribute('src');
+    const c=await drawPoster(posterData);
+    posterBlob=await new Promise(res=>c.toBlob(res,'image/png'));
+    if(!posterBlob) return;
+    $('posterImg').src=URL.createObjectURL(posterBlob);
+  }
+}
+function savePoster(){
+  if(!posterBlob) return;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(posterBlob); a.download='the-pits-tour-poster.png';
+  document.body.append(a); a.click(); a.remove();
+}
+$('share').addEventListener('click',()=>{ blip(); openPoster() });
+$('poster').addEventListener('click',e=>{ if(e.target.id==='poster'||e.target.id==='posterX') $('poster').hidden=true });
+$('posterSave').addEventListener('click',savePoster);
+$('posterShare').addEventListener('click',async()=>{
+  if(!posterBlob) return;
+  const file=new File([posterBlob],'the-pits-tour-poster.png',{type:'image/png'});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:lastShare}); return; }
+  }catch(e){ if(e&&e.name==='AbortError') return; }
+  savePoster();
+  try{ await navigator.clipboard.writeText(lastShare); $('posterShare').textContent='SAVED + TEXT COPIED'; }catch(e){ $('posterShare').textContent='SAVED'; }
+  setTimeout(()=>$('posterShare').textContent='SHARE',1800);
 });
 
 renderSetup();
