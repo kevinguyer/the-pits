@@ -409,9 +409,9 @@ function rollNames(){ for(const r of ROLES) for(const m of CAST[r]) m.name = NAM
 rollNames();
 const fill = t => String(t).replace(/\{(\w+)\}/g, (all,id) => NAME[id] || all);
 const VANS = [
-  {id:'coffin',  name:'The Coffin',  the:'the Coffin',     cost:0,   bd:.2, wear:1.5, gas:1.0, comfort:0,   rel:1, cmf:1, blurb:'A retired hearse. Free. Breaks down constantly. Extremely punk, so cred starts high.'},
+  {id:'coffin',  name:'The Coffin',  the:'the Coffin',     cost:0,   bd:.2, wear:1.5, gas:1.0, comfort:0,   rel:1, cmf:1, blurb:'A retired hearse. Free. Breaks down constantly. Extremely punk: cred keeps climbing and every show wins over more of the room.'},
   {id:'sprinter',name:'Stolen Sprinter',the:'the Sprinter',cost:250, bd:.10, wear:1.0, gas:1.1, comfort:.35,  rel:3, cmf:3, blurb:'Bought off a guy named Deke. No paperwork. The cops are curious.'},
-  {id:'bus',     name:'Church Bus',  the:'the church bus',     cost:500, bd:.04, wear:.7,  gas:1.5, comfort:.7, rel:5, cmf:5, blurb:'Reliable and roomy, so fewer fights. Drinks gas. Not remotely punk.'},
+  {id:'bus',     name:'Church Bus',  the:'the church bus',     cost:500, bd:.04, wear:.7,  gas:1.5, comfort:.7, rel:5, cmf:5, blurb:'Reliable and roomy, so fewer fights and a longer tour. Drinks gas. Not remotely punk: cred sinks and crowds are harder to win.'},
   {id:'icecream',name:'Ice Cream Truck',the:'the ice cream truck',cost:350, bd:.08, wear:1.0, gas:1.2, comfort:.15, rel:4, cmf:2, unlock:6500, blurb:'Still stocked. Sells cones outside every show. The jingle does not turn off. Ever.'}
 ];
 const TOWNS = [
@@ -447,6 +447,10 @@ const CHEM = [
   {a:'ghost',b:'marge',  coh:-.8,  text:'{marge} kept trying to exorcise {ghost} during load-in.'},
   {a:'karen',b:'brenda', coh:.6,   text:'{karen} and {brenda} co-wrote the complaint letters. Every venue paid in full.'}
 ];
+// Balance knobs for the two setup choices that used to be flat.
+const MERCH_FANS = .3, MERCH_SELLOUT = 3, PURIST = .8;
+const VAN_CRED = {coffin:.8, bus:-1.2};   // cred per gig: a hearse is a statement, a church bus is an apology
+const VAN_GAIN = {coffin:1.3, bus:.8, icecream:1.08}; // how much of the room a show wins over, by what is parked outside
 const RANKS = [[0,'Played to the Bartender'],[200,'Garage Rumor'],[600,'Local Nuisance'],[1300,'Scene Staple'],[2500,'Regional Menace'],[4500,'Cult Legends'],[8000,'Ruined by Success']];
 function rankFor(f){let r=RANKS[0][1];for(const [n,l] of RANKS)if(f>=n)r=l;return r}
 function setupCost(cfg){
@@ -479,7 +483,7 @@ function newGame(cfg, seed){
   const two = ()=>{const p=members.filter(m=>m.id!=='click'&&m.id!=='ghost');const a=pick(p);let b=pick(p);while(b===a)b=pick(p);return [a,b]};
 
   const S = {fans:0, cash:BUDGET-setupCost(cfg), van:100, coh:75, cred:van.id==='coffin'?62:van.id==='bus'?42:van.id==='icecream'?55:50, fatigue:0, stop:0, lap:1, town:0,
-             phase:'travel', lastMotel:-9, lastPress:-9, pawned:false, over:false, end:null, clickWet:false};
+             phase:'travel', lastMotel:-9, lastPress:-9, rival:0, lastRival:-9, rivalBeat:false, hex:0, pawned:false, over:false, end:null, clickWet:false};
   const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null, pairs:{}, tour:[]};
   const blame = {};
   const used = {};
@@ -521,6 +525,15 @@ function newGame(cfg, seed){
   }
 
   // ---- road events ---------------------------------------------------------
+  const since = id=>used[id]?S.stop-used[id]:0; // stops since an event fired; 0 if it never has
+  const RV = cfg.rival||'The Other Band';
+  const RIVAL = [
+    ()=>ev('RIVALS',`${RV} are working the same circuit. Matching jackets. A van with a decal. Their singer calls you "cute" in a zine.`,{coh:3,cred:-2}),
+    ()=>{ S.hex=.7; return ev('SABOTAGE',`${RV} played ${route[S.town].name} last night and told everyone you had cancelled. Half the town believes it.`,{coh:-2},'road') },
+    ()=>ev('THAT IS OUR RIFF',`${RV} open their set with your riff. They play it faster. ${top('e').name} takes it personally.`,{coh:-4,fans:bump(.03)},'ego'),
+    ()=>ev('FOUR FLAT TIRES',`${RV}'s van is parked behind the venue. ${top('c').name} lets the air out of all four tires. Best night of the tour.`,{coh:6,cred:4}),
+    ()=>{ S.rivalBeat=true; return ev('LAST LAUGH',`${RV} break up on stage two towns over. Their fans need somewhere to go. You are somewhere.`,{fans:bump(.1)+20,coh:3}) }
+  ];
   const EVENTS = [
     {id:'ferret', w:()=>has('gus')?3:.6, f:()=>ev('FERRET',`${by('drums').name} trades the spare tire for a ferret. The ferret is now in the band.`,{van:-8,coh:3},'chaos')},
     {id:'religion', w:()=>1, f:()=>ev('TRUCK STOP REVIVAL',`${by('bass').name} finds religion at a truck stop and loses it again by the next exit.`,{coh:-3},'road')},
@@ -573,13 +586,22 @@ function newGame(cfg, seed){
     {id:'control', w:()=>has('bear')?2:0, f:()=>ev('ANIMAL CONTROL','Animal control turns up with questions. The band says {bear} is a very committed drummer in a costume. They buy it.',{cred:5,coh:3})},
     {id:'jingle', w:()=>van.id==='icecream'?2.5:0, f:()=>ev('THE JINGLE','Hour nine of the jingle. Somebody goes looking for the speaker with a hammer. The jingle survives. It is slower now, and worse.',{coh:-5,van:-5},'van')},
     {id:'cones', w:()=>van.id==='icecream'?2.5:0, f:()=>ev('RED LIGHT','A line of children forms at every red light. You are out of rocket pops by noon.',{cash:70,cred:-3})},
+    // running gags: these only turn up after the event they call back to
+    {id:'mayor2', cb:true, w:()=>since('stray')>=2?4:0, f:()=>ev('MAYOR, AGAIN','Mayor eats forty dollars of merch and one drumstick. {gus} says he is "still settling in".',{cash:-40,coh:-1},'chaos')},
+    {id:'ferret2', cb:true, w:()=>since('ferret')>=2?4:0, f:()=>ev('FERRET, AGAIN','The ferret has learned to unzip the cash bag. It has not learned why it shouldn\'t.',{cash:-35,coh:2},'chaos')},
+    {id:'tamb2', cb:true, w:()=>since('tamb')>=2?4:0, f:()=>ev('TAMBOURINE SOLO','The tambourine has a solo now. Nobody remembers agreeing to that, either.',{coh:-3,cred:-2},'ego')},
+    {id:'door2', cb:true, w:()=>since('door')>=2?4:0, f:()=>ev('THE DOOR','The Coffin\'s door, still riding in the back, gets propped on two amps as a merch table. It outsells the old table.',{cash:45,cred:2})},
+    {id:'zine2', cb:true, w:()=>since('zine')>=3?4:0, f:()=>ev('PRESS, AGAIN','The zine reviews you a second time: "Still unlistenable. Slightly less essential."',{cred:-3,coh:-1},'ego')},
+    {id:'burrito2', cb:true, w:()=>since('burrito')>=3?4:0, f:()=>ev('BURRITOS, AGAIN','Same gas station chain. Same burritos. Nobody has learned a thing.',{coh:-2,fatigue:2},'chaos')},
+    {id:'heater2', cb:true, w:()=>since('heater')>=2?4:0, f:()=>ev('STILL ON','The heater is still on. Everyone is down to underwear and resentment.',{coh:-3},'road')},
+    {id:'hymn2', cb:true, w:()=>since('hymn')>=2?4:0, f:()=>ev('ENCORE','The hymn has made it into the set. The crowd sings along. Nobody is okay with this.',{fans:bump(.04),cred:-3})},
     {id:'exit', w:()=>1, f:()=>ev('WRONG EXIT','Ninety extra miles. Nobody will admit who was holding the map.',{cash:-25,coh:-3,van:-4},'road')},
     {id:'wash', w:()=>1, f:()=>ev('LAUNDRY DAY','Laundry day. Everybody smells like a person again.',{coh:5,cash:-15})}
   ];
   function randomEvent(){
     const pool=EVENTS.filter(e=>(e.rep||!used[e.id])&&e.w()>0);
     let tot=pool.reduce((a,e)=>a+e.w(),0), r=R()*tot;
-    for(const e of pool){r-=e.w(); if(r<=0){used[e.id]=1;return e.f()}}
+    for(const e of pool){r-=e.w(); if(r<=0){used[e.id]=S.stop||1;return e.f()}}
     return pool[0].f();
   }
 
@@ -609,6 +631,10 @@ function newGame(cfg, seed){
     opener:()=>({title:'THE BIG SLOT',text:'A much bigger band offers you an opening slot tomorrow. Four hundred miles in the wrong direction.',opts:[
       {label:'Drive all night',wild:1,hint:'Huge crowd. Brutal drive.',f:()=>({text:'You play to more people than every other show combined. Nobody has slept.',fx:{fans:bump(.2)+35,van:-15,cash:-90,coh:-3,fatigue:4},tag:'road'})},
       {label:'Stick to the plan',hint:'The plan is fine.',f:()=>({text:'You stay on the route. Somebody mutters "could have been us" for a week.',fx:{coh:2}})}]}),
+    battle:()=>({title:'BATTLE OF THE BANDS',text:`${RV} want a split bill tomorrow. The crowd picks a winner. Winner takes the whole door.`,opts:[
+      {label:'Take the bet',wild:1,hint:'Win big, or lose in public.',f:()=>{ if(chance(.25+.1*avg('t'))){ S.rivalBeat=true; return {text:`You bury them. ${RV}'s drummer asks to buy a shirt.`,fx:{cash:180,fans:bump(.15)+25,coh:6,cred:5}}; }
+        return {text:`${RV} win by one cheer. It was their mom. It still counts.`,fx:{coh:-8,cred:-4},tag:'gig'}; }},
+      {label:'Not worth it',hint:'Let them wonder.',f:()=>({text:`You play your own show. ${RV} tell everyone you were scared.`,fx:{cred:-2,coh:1}})}]}),
     diner:()=>({title:'3AM DINER SUMMIT',text:'Nobody has spoken in two hundred miles. Somebody pulls into an all-night diner.',opts:[
       {label:'Air it all out',wild:1,hint:'Could fix everything. Could not.',f:()=>chance(.5)?{text:'Things are said. Things are forgiven. The waitress claps.',fx:{coh:20}}:{text:'Things are said. They cannot be unsaid. The waitress leaves.',fx:{coh:-10},tag:'ego'}},
       {label:'Buy pancakes, say nothing ($70)',hint:'Syrup is a kind of apology.',f:()=>({text:'Nobody talks. Everybody eats. It helps more than it should.',fx:{cash:-70,coh:8}})}]})
@@ -621,7 +647,7 @@ function newGame(cfg, seed){
   function nextDilemma(){
     let id;
     if(dil.done===1 && S.coh<35) id='diner';
-    else { const ids=Object.keys(DILEMMAS).filter(k=>k!=='diner'&&!dil.seen[k]); id=pick(ids); }
+    else { const ids=Object.keys(DILEMMAS).filter(k=>k!=='diner'&&!dil.seen[k]&&(k!=='battle'||S.rival>0)); id=pick(ids); }
     dil.seen[id]=1; dil.done++;
     return DILEMMAS[id]();
   }
@@ -655,8 +681,9 @@ function newGame(cfg, seed){
     }
     if(chance(van.bd*(1+(100-S.van)/60))){
       stats.breakdowns++;
-      const cost=Math.round(rnd(70,180)*(has('rat')?.4:1));
-      const what=pick(['The alternator quits','A tire explodes','The radiator boils over','Something falls off and you drive over it','The fuel pump gives up','The exhaust drags for six miles, then leaves']);
+      let cost=Math.round(rnd(70,180)*(has('rat')?.4:1));
+      let what=pick(['The alternator quits','A tire explodes','The radiator boils over','Something falls off and you drive over it','The fuel pump gives up','The exhaust drags for six miles, then leaves']);
+      if(what==='A tire explodes'&&used.ferret){ what+='. There is no spare. There is a ferret. It happens'; cost+=50; }
       return ev('BREAKDOWN',`${what} near ${town}. ${has('rat')?'{rat} fixes it with a coat hanger and spite.':'Four hours on the shoulder.'}`,{cash:-cost,van:-rnd(10,22),coh:-4},'van');
     }
     const motel=70+50*S.lap;
@@ -666,6 +693,9 @@ function newGame(cfg, seed){
       return ev('SEVEN-INCH','There is finally enough cash to press a 7-inch. Three songs, four minutes, one crooked sleeve. It travels further than the van does.',{cash:-350,fans:bump(.12)+25,cred:3}); }
     if(S.cash>=400 && S.van<45 && chance(.8))
       return ev('TUNE-UP','You can finally afford a real mechanic. He asks what happened. Nobody knows where to start.',{cash:-220,van:35});
+    { const cbs=EVENTS.filter(e=>e.cb&&!used[e.id]&&e.w()>0); // a running gag is due
+      if(cbs.length&&chance(.4)){ const e=pick(cbs); used[e.id]=S.stop; return e.f(); } }
+    if(S.rival<RIVAL.length&&S.stop>=2&&S.stop-S.lastRival>=3&&chance(.85)){ S.lastRival=S.stop; return RIVAL[S.rival++](); }
     if(chance(.42+.07*avg('c')+(chemOn('rat','gus')?.1:0))) return randomEvent();
     return null;
   }
@@ -688,6 +718,7 @@ function newGame(cfg, seed){
     stats.gigs++;
     const cap=Math.round(town.cap*1.3*Math.pow(2,S.lap-1));
     let draw=4+cap*rnd(.12,.4)*(.5+S.cred/100)+S.fans*.22;
+    if(S.hex){ draw*=S.hex; S.hex=0; } // the rivals said you cancelled
     if(has('vex')) draw*=1.1;
     if(has('bear')) draw*=1.2;
     const att=Math.max(2,Math.round(Math.min(cap,draw)));
@@ -701,6 +732,7 @@ function newGame(cfg, seed){
     const tier=q<.4?'disaster':q<.58?'bad':q<.8?'ok':q<.98?'good':'legendary';
     const qq=clamp(q,.05,1.4);
     let gain=att*.9*Math.pow(qq,1.6)+S.fans*.07*Math.pow(qq,1.5)*(S.cred/50);
+    gain*=(1+MERCH_FANS*merch)*(VAN_GAIN[van.id]||1); // every shirt sold is a walking flyer
     if(has('spit')) gain*=1.1;
     if(has('lord')) gain*=1.15;
     if(has('karen')) gain*=1.1;
@@ -715,7 +747,9 @@ function newGame(cfg, seed){
     let coh={disaster:-5,bad:-2,ok:0,good:1.5,legendary:3}[tier];
     let cred=(agg-5)*.5+(tier==='legendary'?5:tier==='disaster'?-2:0);
     if(has('ghost')) cred+=.5;
-    if(merch>.6) cred-=(merch-.6)*2.5;
+    if(merch>.5) cred-=(merch-.5)*MERCH_SELLOUT; // a big merch table reads as selling out
+    if(merch===0) cred+=PURIST;                 // nothing for sale: the scene respects it
+    cred+=VAN_CRED[van.id]||0;                  // what you pulled up in
     if(has('click')) cred-=.6;
     let line=pick(GIG_TEXT[tier]).replace('{M}',pick(members).name), extra='';
     if(agg-town.t>=4 && chance(.28)){
@@ -789,6 +823,8 @@ function newGame(cfg, seed){
     if(w&&stats.gigs>1&&(w.tier==='disaster'||w.tier==='bad')) out.push(`The low point was ${w.venue} in ${w.town}. ${w.line}`);
     if(stats.breakdowns>=3) out.push(`${VThe} broke down ${stats.breakdowns} times and is remembered less fondly than the band.`);
     else if(b&&(b.tier==='good'||b.tier==='legendary')) out.push(`For one night at ${b.venue} in ${b.town}, this was the best band in the world.`);
+    if(S.rival>0) out.splice(Math.min(1,out.length),0,S.rivalBeat?`${RV} broke up first. That still counts for something.`:`${RV} got signed the following week.`);
+    out.length=Math.min(out.length,3);
     const rest=members.filter(m=>m.name!==who).map(m=>m.name);
     for(let i=rest.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [rest[i],rest[j]]=[rest[j],rest[i]]; }
     const [x,y,z]=rest;
@@ -889,7 +925,7 @@ function renderSetup(){
   $('aggNote').textContent=AGG_LAB[cfg.agg]+(cfg.agg>=8?'. Basements love it. Ballrooms pull the plug.':cfg.agg<=3?'. Coffee shops love it. Your cred will not.':'. Works in most rooms. Amazes none.');
   $('merch').value=cfg.merch; $('merchVal').textContent=money(cfg.merch);
   const m=cfg.merch;
-  $('merchNote').textContent=m===0?'Nothing. Art is not for sale. Neither is gas.':m<=150?'Sharpie on thrift-store shirts.':m<=350?'Stickers and one suspicious-looking tee.':m<=600?'Real screen-printed shirts.':m<=800?'Shirts, patches, a tote bag.':'A full merch table. The scene calls you sellouts.';
+  $('merchNote').textContent=m===0?'Nothing. Art is not for sale. The scene respects that. Nobody leaves wearing your name.':m<=150?'Sharpie on thrift-store shirts. A few walking flyers.':m<=350?'Stickers and one suspicious-looking tee.':m<=600?'Real screen-printed shirts. Fans spread faster. Cred starts to itch.':m<=800?'Shirts, patches, a tote bag. Your name is everywhere. So is the eye-rolling.':'A full merch table. Most fans per show, and the scene calls you sellouts.';
   document.querySelectorAll('#modes .card').forEach(b=>b.classList.toggle('on',(b.dataset.mode==='manual')===!!cfg.manual));
   const left=BUDGET-setupCost(cfg);
   $('left').textContent=money(left);
@@ -1310,10 +1346,14 @@ function flyer(title,text,d,opts,cap){
 // ---- tour loop ----------------------------------------------------------------
 function show(id){ for(const s of ['splash','setup','run','obit']) $(s).hidden=s!==id; }
 let lastRegion=-1;
+function rivalName(){ let n; do{ n=randName() }while(n===cfg.name); return n; }
+// Phone buzz on the big moments. Android only: iPhones do not support it in the browser.
+function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p) }catch(e){} }
+const ROUGH=/BREAKDOWN|VAN DIES|PAWN|FIST FIGHT|FLAT BROKE|VAN FLU|SABOTAGE/;
 async function startTour(){
   const my=++runId;
   audio();
-  G=newGame(Object.assign({},cfg,{towns:EXTRA_TOWNS.filter(avail).map(t=>t.name)}),(Math.random()*2**32)>>>0);
+  G=newGame(Object.assign({},cfg,{towns:EXTRA_TOWNS.filter(avail).map(t=>t.name),rival:rivalName()}),(Math.random()*2**32)>>>0);
   G.cfg=Object.assign({},cfg,{lineup:Object.assign({},cfg.lineup)});
   let ri; do{ ri=Math.random()*REGIONS.length|0 }while(REGIONS.length>1&&ri===lastRegion); lastRegion=ri;
   G.region=Object.assign({rot:(Math.random()-.5)*.16},REGIONS[ri]);
@@ -1335,13 +1375,13 @@ async function startTour(){
       await wait(2500); if(my!==runId) return;
       trav=null; meters();
     } else if(b.kind==='choice'){
-      thud();
+      thud(); buzz([30,50,30]);
       const i=await flyer(b.title,b.text,null,b.opts); if(my!==runId) return;
-      const r=G.choose(i); hit();
+      const r=G.choose(i); hit(); buzz(20);
       const shown=flyer(r.title,`<b>${r.choice}.</b> ${r.text}`,r.d); meters(); log(`<b style="width:auto;color:inherit">${r.choice}:</b> ${r.text} ${chips(r.d)}`);
       await shown; if(my!==runId) return; $('flyer').hidden=true;
     } else if(b.kind==='event'){
-      const bad=(b.d.coh||0)+(b.d.van||0)/2+(b.d.cash||0)/20<0; bad?thud():hit();
+      const bad=(b.d.coh||0)+(b.d.van||0)/2+(b.d.cash||0)/20<0; bad?thud():hit(); buzz(ROUGH.test(b.title)?[70,40,130]:bad?40:15);
       const shown=flyer(b.title,b.text,b.d); meters(); log(`${b.text} ${chips(b.d)}`);
       await shown; if(my!==runId) return; $('flyer').hidden=true;
     } else if(b.kind==='gig'){
@@ -1351,12 +1391,12 @@ async function startTour(){
         pics:pickCrowd(3),photo:b.att<10?0:Math.min(.5,.1+.2*Math.min(1,b.att/150)+.2*Math.max(0,Math.min(1,(b.q-.4)/.6)))};
       scene='gig'; const clip=gigMusic(cfg.agg);
       await wait(clip?3000:2100); if(my!==runId) return;
-      gigAnim.reveal=clock; { const good=b.tier!=='disaster'&&b.tier!=='bad', c=good?CLIP.good:CLIP.bad; if(c) playClip(c,.8); else if(!clip) sting(good); }
+      gigAnim.reveal=clock; buzz({legendary:[40,30,40,30,40,30,180],good:[30,30,90],ok:25,bad:60,disaster:[260]}[b.tier]); { const good=b.tier!=='disaster'&&b.tier!=='bad', c=good?CLIP.good:CLIP.bad; if(c) playClip(c,.8); else if(!clip) sting(good); }
       meters(); log(`${b.town}, ${b.venue}: ${b.text} ${chips(b.d)}`,'gig');
       await flyer('',b.text,b.d,null,true); if(my!==runId) return; $('flyer').hidden=true;
       scene='map'; roadMusic();
     } else if(b.kind==='end'){
-      stopClips(); if(CLIP.end) playClip(CLIP.end,.9); else dirge(); meters();
+      stopClips(); if(CLIP.end) playClip(CLIP.end,.9); else dirge(); buzz([200,100,200,100,500]); meters();
       const shown=flyer(b.reason==='stranded'?'STRANDED':'IT\'S OVER',b.cause);
       log(`<b style="width:auto;color:inherit">THE END.</b> ${b.cause}`,'gig');
       await shown; if(my!==runId) return;
@@ -1368,7 +1408,7 @@ $('spd').addEventListener('click',()=>{speed=speed===1?2:speed===2?4:1;$('spd').
 function sndLabel(){ $('snd').textContent=soundOn?'SOUND ON':'SOUND OFF'; $('snd').classList.toggle('on',soundOn) }
 $('snd').addEventListener('click',()=>{soundOn=!soundOn;store.set('sound',soundOn);sndLabel();if(soundOn){blip();if(running)startBed(scene==='gig'?LOUD:QUIET,600)}else stopClips()});
 sndLabel();
-function toSetup(){ runId++; running=false; waiters=[]; stopClips(); rollNames(); show('setup'); renderSetup(); }
+function toSetup(){ buzz(0); runId++; running=false; waiters=[]; stopClips(); rollNames(); show('setup'); renderSetup(); }
 $('quit').addEventListener('click',toSetup);
 
 // ---- obituary -------------------------------------------------------------------
