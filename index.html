@@ -212,7 +212,7 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #obest{font-family:"Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;transform:rotate(-2deg)}
 #obit .btns .two button:first-child{transform:rotate(1.2deg)}
 #obit .btns .two button:last-child{transform:rotate(-1.8deg)}
-#aboutRow{text-align:center;margin:22px 0 4px}
+#aboutRow{display:flex;justify-content:center;gap:16px;margin:22px 0 4px}
 #aboutBtn{min-height:34px;font-weight:700;font-size:12px;letter-spacing:.14em;transform:rotate(-3deg);background:var(--paper);box-shadow:3px 3px 0 var(--pink)}
 #about{position:fixed;inset:0;z-index:20;background:rgba(20,18,16,.82);display:flex;align-items:center;justify-content:center;padding:24px}
 #about .sheet{position:relative;max-width:340px;width:100%;background:#f7f3e6;border:solid var(--ink);border-width:3px 4px 5px 3px;padding:22px 16px 16px;
@@ -228,6 +228,23 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
 #splashImg{width:min(108%,58dvh);height:auto;max-width:none;mix-blend-mode:multiply;transform:rotate(-2.5deg);margin:-4dvh 0 -2dvh;pointer-events:none}
 #enter{max-width:280px;font-size:26px;min-height:60px;transform:rotate(1.5deg)}
 #splashNote{font-size:13px;transform:rotate(-3deg);margin:14px 0 0}
+#rapBtn{min-height:34px;font-weight:700;font-size:12px;letter-spacing:.14em;transform:rotate(2deg);background:var(--paper);box-shadow:3px 3px 0 var(--pink)}
+#rap{position:fixed;inset:0;z-index:20;background:rgba(20,18,16,.82);display:flex;align-items:center;justify-content:center;padding:18px}
+#rap .sheet{position:relative;max-width:380px;width:100%;max-height:88dvh;overflow-y:auto;background:#f7f3e6;border:solid var(--ink);border-width:3px 4px 5px 3px;padding:20px 14px 10px;
+  transform:rotate(.7deg);box-shadow:7px 7px 0 var(--pink);animation:slapAbout .18s ease-out}
+#rap h3{margin:0 0 4px;font:30px/1 Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.06em;text-shadow:2px 2px 0 rgba(255,46,126,.6)}
+#rap .sub{margin:0 0 10px;font-size:12px;color:var(--dim)}
+#rapX{position:sticky;float:right;top:0;margin:-12px -6px 0 0;min-height:34px;width:34px;padding:0;font:700 20px/1 "Courier New",monospace;transform:rotate(5deg);background:var(--ink);color:var(--paper)}
+#rapList{list-style:none;margin:0;padding:0}
+#rapList li{border-top:2px dashed rgba(20,18,16,.3);padding:7px 0 6px;font-size:12px;opacity:.45}
+#rapList li.got{opacity:1}
+#rapList b{display:block;font:17px/1.15 Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.05em}
+#rapList em{font:400 11px "Permanent Marker","Segoe Print","Marker Felt",cursive;background:var(--pink);padding:1px 6px;margin-left:8px;display:inline-block;transform:rotate(-4deg);letter-spacing:.04em;vertical-align:2px}
+#orap{margin:12px 0 2px;font-size:12px;color:var(--dim)}
+#orap.new{color:var(--ink);background:#f7f3e6;border:3px solid var(--ink);padding:8px 10px;font-size:12px;transform:rotate(1.3deg);box-shadow:4px 4px 0 var(--pink)}
+#orap.new>b{display:block;font:24px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.08em}
+#orap.new div{margin-top:5px}
+#orap.new div b{font:15px Impact,Haettenschweiler,"Arial Black",sans-serif;letter-spacing:.05em;margin-right:6px}
 .row.four{grid-template-columns:repeat(2,1fr)}
 .lock{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.03em;border:2px dashed var(--ink);padding:5px 8px;opacity:.65;transform:rotate(-.7deg)}
 #life{margin:12px 0 2px;border:solid var(--ink);border-width:2px 3px 3px 2px;padding:6px 9px 7px;font-size:11px;font-weight:700;letter-spacing:.06em;transform:rotate(.6deg);background:rgba(255,255,255,.25)}
@@ -299,11 +316,11 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
   <h2>WHO'S DRIVING</h2>
   <div class="modes" id="modes">
     <button class="card" data-mode="auto"><b>HANDS OFF</b><span>Sit back. The band makes its own decisions. Badly.</span></button>
-    <button class="card" data-mode="manual"><b>BAND MANAGER</b><span>Same tour, but you make two big calls on the road.</span></button>
+    <button class="card" data-mode="manual"><b>BAND MANAGER</b><span>Same tour, but you make the big calls on the road and pick the setlist now and then.</span></button>
   </div>
   <p id="bestLine"></p>
   <div id="hall" hidden><h2>THE GRAVEYARD <button id="wipe">WIPE</button></h2><ol id="hallList"></ol></div>
-  <p id="aboutRow"><button id="aboutBtn">ABOUT</button></p>
+  <p id="aboutRow"><button id="rapBtn">RAP SHEET</button><button id="aboutBtn">ABOUT</button></p>
 
   <div id="bar">
     <div class="money" id="money"><small>Gas money</small><b id="left"></b></div>
@@ -349,6 +366,7 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
     <h4>Worst night</h4><div class="txt" id="oworstgig"></div>
     <div id="ochemWrap"><h4>What you didn't know</h4><div class="txt" id="ochem"></div></div>
     <div id="obest"></div>
+    <div id="orap"></div>
     <div id="ounlock"></div>
   </div>
   <div class="btns">
@@ -362,6 +380,15 @@ button.big{transform:rotate(-1.2deg);box-shadow:6px 4px 0 var(--pink),-2px 7px 0
     <button id="posterX" aria-label="Close">&times;</button>
     <img id="posterImg" alt="Tour poster" width="1080" height="1350">
     <div class="two"><button id="posterShare">SHARE</button><button id="posterSave">SAVE</button></div>
+  </div>
+</div>
+
+<div id="rap" hidden>
+  <div class="sheet" role="dialog" aria-label="Rap sheet">
+    <button id="rapX" aria-label="Close">&times;</button>
+    <h3>RAP SHEET</h3>
+    <p class="sub" id="rapSub"></p>
+    <ul id="rapList"></ul>
   </div>
 </div>
 
@@ -484,10 +511,12 @@ function newGame(cfg, seed){
 
   const S = {fans:0, cash:BUDGET-setupCost(cfg), van:100, coh:75, cred:van.id==='coffin'?62:van.id==='bus'?42:van.id==='icecream'?55:50, fatigue:0, stop:0, lap:1, town:0,
              phase:'travel', lastMotel:-9, lastPress:-9, rival:0, lastRival:-9, rivalBeat:false, hex:0, pawned:false, over:false, end:null, clickWet:false};
-  const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null, pairs:{}, tour:[]};
+  const stats = {gigs:0, breakdowns:0, fights:0, best:null, worst:null, kicked:null, pairs:{}, tour:[], plugs:0, fingers:0, battleLost:0, sold:0, exposure:0, broke:0, cover:0, solo:0, sets:0};
   const blame = {};
   const used = {};
-  const dil = {first:3+Math.floor(R()*3), second:9+Math.floor(R()*3), done:0, pending:null, seen:{}};
+  const dil = {first:3+Math.floor(R()*3), second:9+Math.floor(R()*3), done:0, pending:null, seen:{}, at:-1};
+  // Manager mode only: one or two calls about tonight's setlist, between the big road decisions.
+  const setl = cfg.manual ? {at:[dil.first-1].concat(R()<.55?[8+Math.floor(R()*3)]:[]), done:0, seen:{}} : null;
 
   function apply(fx, tag){
     const d = {};
@@ -608,7 +637,7 @@ function newGame(cfg, seed){
   // ---- dilemmas (two per tour) --------------------------------------------
   const DILEMMAS = {
     suit:()=>({title:'A SUIT APPEARS',text:'A man in very clean boots offers $700 to play a "brand showcase" for a vape company.',opts:[
-      {label:'Take the money',hint:'+$700. People will talk.',f:()=>({text:'You play under a vinyl banner. The cheque clears. The scene remembers.',fx:{cash:700,cred:-22,coh:-4},tag:'money'})},
+      {label:'Take the money',hint:'+$700. People will talk.',f:()=>(stats.sold++,{text:'You play under a vinyl banner. The cheque clears. The scene remembers.',fx:{cash:700,cred:-22,coh:-4},tag:'money'})},
       {label:'Tell him to eat it',wild:1,hint:'Costs nothing. Feels great.',f:()=>({text:`${top('c').name} tells him exactly where to put the vape. Morale soars.`,fx:{cred:12,coh:5}})}]}),
     kick:()=>{
       const cand=members.filter(m=>m.id!=='teen').slice().sort((a,b)=>(b.c+b.e-b.t)-(a.c+a.e-a.t));
@@ -623,7 +652,7 @@ function newGame(cfg, seed){
       {label:'Fix it now ($220)',hint:'A real mechanic. Real money.',f:()=>({text:'A mechanic removes something that was never supposed to be in an engine.',fx:{cash:-220,van:35}})},
       {label:'Turn the radio up',wild:1,hint:'Free. Probably fine.',f:()=>chance(.5)?{text:'The Noise stops on its own. Nobody mentions it again.',fx:{coh:2}}:{text:'The Noise becomes The Smell.',fx:{van:-35,coh:-2},tag:'van'}}]}),
     second:()=>({title:'ONE MORE SET',text:'A promoter offers a second show tonight: a house party, paid in "exposure".',opts:[
-      {label:'Play it',wild:1,hint:'New fans. No sleep.',f:()=>({text:'You play a kitchen at 2am. The fridge gets a pit. Everyone films it.',fx:{fans:bump(.12)+15,coh:-5,fatigue:4},tag:'road'})},
+      {label:'Play it',wild:1,hint:'New fans. No sleep.',f:()=>(stats.exposure++,{text:'You play a kitchen at 2am. The fridge gets a pit. Everyone films it.',fx:{fans:bump(.12)+15,coh:-5,fatigue:4},tag:'road'})},
       {label:'Go to sleep',hint:'Rest is punk now.',f:()=>({text:'Eight hours. Horizontal. The band is almost pleasant by morning.',fx:{coh:4,fatigue:-5}})}]}),
     dayoff:()=>({title:'DAY OFF',text:'A whole day with no show. Half the band wants to record a demo. Half wants the water park.',opts:[
       {label:'Record a demo ($150)',hint:'Something to hand people.',f:()=>({text:'Four songs in a garage, one take each. People actually pass it around.',fx:{cash:-150,fans:bump(.1)+10,cred:6}})},
@@ -633,7 +662,7 @@ function newGame(cfg, seed){
       {label:'Stick to the plan',hint:'The plan is fine.',f:()=>({text:'You stay on the route. Somebody mutters "could have been us" for a week.',fx:{coh:2}})}]}),
     battle:()=>({title:'BATTLE OF THE BANDS',text:`${RV} want a split bill tomorrow. The crowd picks a winner. Winner takes the whole door.`,opts:[
       {label:'Take the bet',wild:1,hint:'Win big, or lose in public.',f:()=>{ if(chance(.25+.1*avg('t'))){ S.rivalBeat=true; return {text:`You bury them. ${RV}'s drummer asks to buy a shirt.`,fx:{cash:180,fans:bump(.15)+25,coh:6,cred:5}}; }
-        return {text:`${RV} win by one cheer. It was their mom. It still counts.`,fx:{coh:-8,cred:-4},tag:'gig'}; }},
+        stats.battleLost++; return {text:`${RV} win by one cheer. It was their mom. It still counts.`,fx:{coh:-8,cred:-4},tag:'gig'}; }},
       {label:'Not worth it',hint:'Let them wonder.',f:()=>({text:`You play your own show. ${RV} tell everyone you were scared.`,fx:{cred:-2,coh:1}})}]}),
     diner:()=>({title:'3AM DINER SUMMIT',text:'Nobody has spoken in two hundred miles. Somebody pulls into an all-night diner.',opts:[
       {label:'Air it all out',wild:1,hint:'Could fix everything. Could not.',f:()=>chance(.5)?{text:'Things are said. Things are forgiven. The waitress claps.',fx:{coh:20}}:{text:'Things are said. They cannot be unsaid. The waitress leaves.',fx:{coh:-10},tag:'ego'}},
@@ -648,8 +677,46 @@ function newGame(cfg, seed){
     let id;
     if(dil.done===1 && S.coh<35) id='diner';
     else { const ids=Object.keys(DILEMMAS).filter(k=>k!=='diner'&&!dil.seen[k]&&(k!=='battle'||S.rival>0)); id=pick(ids); }
-    dil.seen[id]=1; dil.done++;
+    dil.seen[id]=1; dil.done++; dil.at=S.stop;
     return DILEMMAS[id]();
+  }
+  // ---- setlist calls (manager mode) ------------------------------------------
+  // Each one sets S.set, which the next gig reads: q (how well it goes), gain (fans), door (pay), cred, note.
+  const SETLISTS = {
+    newone:()=>({title:'THE SETLIST',text:`${by('vocals').name} wants to open tonight with the new one. Nobody has finished learning the new one.`,opts:[
+      {label:'Open with the new one',wild:1,hint:'Could be a moment. Could be a mess.',f:()=>{ const ok=chance(.3+.08*avg('t'));
+        S.set=ok?{q:.16,gain:1.2,cred:3,note:' The new one is the best thing you have ever played.'}:{q:-.14,cred:1,note:' The new one falls apart in the bridge. Twice.'};
+        return {text:'It goes at the top of the setlist, in pen.',fx:{coh:2}}; }},
+      {label:'Play the fast ones',hint:'Safe. Loud. Over quickly.',f:()=>{ S.set={q:.06};
+        return {text:`The new one waits. ${by('vocals').name} sulks through soundcheck.`,fx:{coh:-2},tag:'ego'}; }}]}),
+    cover:()=>({title:'REQUEST',text:'The promoter\'s brother has yelled for the same classic rock song all through soundcheck. He has brought friends.',opts:[
+      {label:'Play the cover',hint:'The crowd will love it. You will not.',f:()=>{ stats.cover++; S.set={gain:1.3,cred:-5,note:' The cover gets the biggest cheer of the night. Nobody mentions it in the van.'};
+        return {text:'You learn it in the parking lot. It has four chords. You know three.',fx:{coh:-3},tag:'ego'}; }},
+      {label:'Play it wrong on purpose',wild:1,hint:'Art. Spite. Possibly both.',f:()=>{ S.set={q:-.04,cred:5,note:' You play the request at triple speed in the wrong key. The brother leaves.'};
+        return {text:'Everybody agrees on something for the first time this week.',fx:{coh:4}}; }}]}),
+    short:()=>({title:'HOW LONG A SET',text:'The venue wants forty-five minutes. The band has twenty minutes of songs and no sleep.',opts:[
+      {label:'Twelve minutes, no talking',hint:'All killers. Docked pay.',f:()=>{ S.set={q:.08,door:.6,note:' Twelve minutes. Nobody had time to get bored.'};
+        return {text:'Every song, one after the other. No tuning, no banter.',fx:{fatigue:-2,coh:1}}; }},
+      {label:'Pad it to forty-five',wild:1,hint:'Full pay. Everything twice.',f:()=>{ S.set={q:-.05,gain:1.15,door:1.3,note:' You play the whole set twice. Some people think that was the point.'};
+        return {text:`${by('vocals').name} prepares eleven minutes of stage banter.`,fx:{fatigue:2,coh:-2},tag:'road'}; }}]}),
+    slow:()=>({title:'THE SLOW ONE',text:`${by('bass').name} has written a slow song. It is about feelings. It is six minutes long.`,opts:[
+      {label:'Play the slow one',wild:1,hint:'Some rooms cry. Some rooms leave.',f:()=>{ const soft=route[S.town].t<=5;
+        S.set=soft?{q:.14,gain:1.2,note:' The slow one stops the room dead. Somebody holds up a lighter.'}:{q:-.12,cred:-2,note:' The slow one empties the pit. Somebody yells "FASTER" for six minutes.'};
+        return {text:`${by('bass').name} has never looked happier, which is unsettling.`,fx:{coh:6}}; }},
+      {label:'Bury it',hint:'Keep it loud. Hurt some feelings.',f:()=>{ S.set={q:.04};
+        return {text:`The slow one goes back in the notebook. ${by('bass').name} says it is fine. It is not fine.`,fx:{coh:-4},tag:'ego'}; }}]}),
+    solo:()=>({title:'DRUM SOLO',text:`${by('drums').name} asks for a drum solo. Again. This time there is a written proposal.`,opts:[
+      {label:'Fine. One solo',wild:1,hint:'Joy for one. Risk for all.',f:()=>{ stats.solo++; const ok=chance(.15+.14*by('drums').t);
+        S.set=ok?{q:.1,gain:1.15,note:' The drum solo is, against all odds, the highlight.'}:{q:-.1,note:' The drum solo lasts nine minutes. The bar does well.'};
+        return {text:`${by('drums').name} starts stretching.`,fx:{coh:4}}; }},
+      {label:'Absolutely not',hint:'The songs are short for a reason.',f:()=>{ S.set={q:.03};
+        return {text:`Request denied. ${by('drums').name} plays the whole set slightly too fast, out of spite.`,fx:{coh:-3},tag:'ego'}; }}]})
+  };
+  function setlistDue(){ return !!setl && setl.done<setl.at.length && S.stop>=setl.at[setl.done] && dil.at!==S.stop && S.fatigue<=12; }
+  function setlistBeat(){
+    const id=pick(Object.keys(SETLISTS).filter(k=>!setl.seen[k])); setl.seen[id]=1; setl.done++; stats.sets++;
+    const dm=SETLISTS[id](); dil.pending=dm;
+    return {kind:'choice',title:dm.title,text:fill(dm.text),opts:dm.opts.map(o=>({label:fill(o.label),hint:o.hint}))};
   }
   function resolve(dm, i){
     const o=dm.opts[i], r=o.f();
@@ -668,6 +735,7 @@ function newGame(cfg, seed){
       S.over=true; S.end={reason:'stranded'}; return null;
     }
     if(S.cash<0){
+      stats.broke++;
       return ev('FLAT BROKE','Out of money. You siphon gas from a boat dealership and busk outside a pharmacy until you have enough to leave.',{cash:-S.cash+10,coh:-6,cred:2,fatigue:2},'money');
     }
     if(dilemmaDue()){
@@ -729,6 +797,7 @@ function newGame(cfg, seed){
     if(chemOn('lord','mother')) q+=.04;
     if(has('trevor')&&agg<=4) q+=.05;
     if(S.clickWet&&has('click')){q-=.2;S.clickWet=false}
+    const set=S.set||{}; S.set=null; q+=set.q||0; // tonight's setlist call, if the manager made one
     const tier=q<.4?'disaster':q<.58?'bad':q<.8?'ok':q<.98?'good':'legendary';
     const qq=clamp(q,.05,1.4);
     let gain=att*.9*Math.pow(qq,1.6)+S.fans*.07*Math.pow(qq,1.5)*(S.cred/50);
@@ -743,6 +812,7 @@ function newGame(cfg, seed){
     let door=13*crowd*(tier==='disaster'?.3:1);
     let merchCash=crowd*(1+15*merch)*(.5+qq*.6)*(has('brenda')?1.25:1)*(chemOn('brenda','click')?1.1:1);
     if(has('karen')) door*=1.25;
+    gain*=set.gain||1; door*=set.door||1;
     if(van.id==='icecream') merchCash+=crowd*4; // cones
     let coh={disaster:-5,bad:-2,ok:0,good:1.5,legendary:3}[tier];
     let cred=(agg-5)*.5+(tier==='legendary'?5:tier==='disaster'?-2:0);
@@ -750,21 +820,22 @@ function newGame(cfg, seed){
     if(merch>.5) cred-=(merch-.5)*MERCH_SELLOUT; // a big merch table reads as selling out
     if(merch===0) cred+=PURIST;                 // nothing for sale: the scene respects it
     cred+=VAN_CRED[van.id]||0;                  // what you pulled up in
+    cred+=set.cred||0;
     if(has('click')) cred-=.6;
-    let line=pick(GIG_TEXT[tier]).replace('{M}',pick(members).name), extra='';
+    let line=pick(GIG_TEXT[tier]).replace('{M}',pick(members).name), extra=set.note||'';
     if(agg-town.t>=4 && chance(.28)){
-      gain*=.6; cred+=5;
-      if(has('karen')) extra=' The owner pulls the plug during song two. {karen} gets the door money anyway, and an apology.';
-      else { door=0; extra=' The owner pulls the plug during song two. You finish it unplugged, screaming. No pay.'; }
+      gain*=.6; cred+=5; stats.plugs++;
+      if(has('karen')) extra+=' The owner pulls the plug during song two. {karen} gets the door money anyway, and an apology.';
+      else { door=0; extra+=' The owner pulls the plug during song two. You finish it unplugged, screaming. No pay.'; }
     } else if(has('spit')&&!has('marge')&&chance(.12)){
       door=0; cred+=4; coh-=3;
-      extra=' {spit} fights the sound guy. The door money goes to the sound guy.';
+      extra+=' {spit} fights the sound guy. The door money goes to the sound guy.';
     }
     if(agg>=7){
       const st=has('stitches');
       if(chance((agg-6)*.035*(st?2:1))){
         const m=st?by('guitar'):pick(members.filter(x=>x.id!=='click'&&x.id!=='ghost'));
-        if(m&&m.hurt<=0){m.hurt=3; extra+=` ${m.name} breaks a finger on somebody's face.`;}
+        if(m&&m.hurt<=0){m.hurt=3; stats.fingers++; extra+=` ${m.name} breaks a finger on somebody's face.`;}
       }
     }
     if(tier==='good'||tier==='legendary'){const m=top('t'); m.e+=m.id==='lord'?.3:.13;}
@@ -853,13 +924,45 @@ function newGame(cfg, seed){
       if(S.over){ S.done=true; return endBeat(); }
       if(b) return b;
     }
+    if(setlistDue()) return setlistBeat();
     S.phase='travel';
     return gig();
   }
   function choose(i){ const dm=dil.pending; dil.pending=null; return resolve(dm,i); }
-  return {S, stats, members, van, towns:route, next, choose, chem, rank:()=>rankFor(Math.round(S.fans))};
+  return {S, stats, members, van, towns:route, next, choose, chem, used, gags:()=>EVENTS.filter(e=>e.cb&&used[e.id]).length, rank:()=>rankFor(Math.round(S.fans))};
 }
 /*ENGINE-END*/
+
+// ---- rap sheet: charges a band can pick up on tour. Each test reads the finished game. ----
+/*RAP-START*/
+const nights=(g,t)=>g.stats.tour.filter(x=>x.tier===t).length;
+const CHARGES=[
+  {id:'lemon',   n:'LEMON LAW',            d:'Break down five times in one tour.',                    t:g=>g.stats.breakdowns>=5},
+  {id:'plug',    n:'DISTURBING THE PEACE', d:'Get the plug pulled twice in one tour.',                t:g=>g.stats.plugs>=2},
+  {id:'ferret',  n:'HARBORING A FERRET',   d:'End a tour with the ferret still in the band.',         t:g=>!!g.used.ferret},
+  {id:'fingers', n:'ASSAULT WITH A FACE',  d:'Break two fingers on the audience in one tour.',        t:g=>g.stats.fingers>=2},
+  {id:'flu',     n:'PUBLIC HEALTH HAZARD', d:'Cancel two shows with the van flu.',                    t:g=>nights(g,'cancelled')>=2},
+  {id:'dog',     n:'PLAYED TO THE DOG',    d:'Three disasters in one tour.',                          t:g=>nights(g,'disaster')>=3},
+  {id:'riot',    n:'INCITING A RIOT',      d:'Two legendary shows in one tour.',                      t:g=>nights(g,'legendary')>=2},
+  {id:'fights',  n:'AFFRAY',               d:'Have a fist fight in the van.',                         t:g=>g.stats.fights>0},
+  {id:'last',    n:'LAST BAND STANDING',   d:'Outlast your rivals.',                                  t:g=>g.S.rivalBeat},
+  {id:'mom',     n:'BEATEN BY THEIR MOM',  d:'Lose the battle of the bands.',                         t:g=>g.stats.battleLost>0},
+  {id:'vape',    n:'SOLICITATION',         d:'Take the vape money.',                                  t:g=>g.stats.sold>0},
+  {id:'expo',    n:'INDECENT EXPOSURE',    d:'Play a show for exposure.',                             t:g=>g.stats.exposure>0},
+  {id:'kick',    n:'ABANDONMENT',          d:'Leave a band member at a rest stop.',                   t:g=>!!g.stats.kicked},
+  {id:'pawn',    n:'FENCING',              d:'Pawn the amps to keep the van rolling.',                t:g=>g.S.pawned},
+  {id:'broke',   n:'VAGRANCY',             d:'Go flat broke and busk your way out of town.',          t:g=>g.stats.broke>0},
+  {id:'repeat',  n:'REPEAT OFFENDER',      d:'Have two old mistakes come back in one tour.',          t:g=>g.gags()>=2},
+  {id:'noise',   n:'NOISE VIOLATION',      d:'Play eight shows at maximum aggression.',               t:(g,c)=>c.agg>=10&&g.stats.gigs>=8},
+  {id:'purist',  n:'NOTHING TO DECLARE',   d:'Make 1,000 fans without selling a single shirt.',       t:(g,c)=>c.merch===0&&g.S.fans>=1000},
+  {id:'loiter',  n:'LOITERING',            d:'Survive into a fourth lap of the circuit.',             t:g=>g.S.lap>=4},
+  {id:'noshow',  n:'FAILURE TO APPEAR',    d:'Break up within nine shows.',                           t:g=>g.stats.gigs<=9},
+  {id:'tax',     n:'TAX EVASION',          d:'Finish a tour with $4,000 in cash.',                    t:g=>g.S.cash>=4000},
+  {id:'menace',  n:'PUBLIC MENACE',        d:'Make 5,000 fans in one tour.',                          t:g=>g.S.fans>=5000},
+  {id:'cover',   n:'FALSE ADVERTISING',    d:'Play the cover. (Band manager only.)',                  t:g=>g.stats.cover>0},
+  {id:'solo',    n:'CRUEL AND UNUSUAL',    d:'Allow a drum solo. (Band manager only.)',               t:g=>g.stats.solo>0}
+];
+/*RAP-END*/
 
 // ---------------------------------------------------------------------------
 // UI
@@ -937,6 +1040,7 @@ function renderSetup(){
   const hall=store.get('hall',[]), hl=$('hallList'); $('hall').hidden=!hall.length; hl.innerHTML='';
   for(const h of hall){ const li=document.createElement('li'), b=document.createElement('b'), sp=document.createElement('span');
     b.textContent=`${h.fans.toLocaleString()} \u00b7 ${h.name}`; sp.textContent=` ${h.rank}, ${h.mode==='manual'?'manager':'hands off'}, ${h.gigs} gigs. ${h.cause}`; li.append(b,sp); hl.append(li); }
+  $('rapBtn').textContent=`RAP SHEET ${rapCount()}/${CHARGES.length}`;
   store.set('cfg',cfg);
 }
 $('setup').addEventListener('click',e=>{
@@ -954,6 +1058,17 @@ $('reroll').addEventListener('click',()=>{cfg.name=randName();$('bname').value=c
 $('wipe').addEventListener('click',()=>{ if(confirm('Wipe every saved tour and best score?')){ store.set('hall',[]); store.set('best.auto',0); store.set('best.manual',0); renderSetup(); } });
 $('aboutBtn').addEventListener('click',()=>{$('about').hidden=false;blip()});
 $('about').addEventListener('click',e=>{ if(e.target.id==='about'||e.target.id==='aboutX') $('about').hidden=true });
+// ---- rap sheet: every charge the player's bands have ever picked up, kept across tours ----
+function rapCount(){ const r=store.get('rap',{}); return CHARGES.filter(c=>r[c.id]).length; }
+function renderRap(){
+  const r=store.get('rap',{}), ul=$('rapList'); ul.innerHTML='';
+  $('rapSub').textContent=`${rapCount()} of ${CHARGES.length} charges on file. Bands come and go. The record is permanent.`;
+  for(const c of CHARGES){ const li=document.createElement('li'), b=document.createElement('b');
+    b.textContent=c.n; if(r[c.id]){ li.className='got'; const em=document.createElement('em'); em.textContent=r[c.id]>1?`GUILTY ×${r[c.id]}`:'GUILTY'; b.append(em); }
+    li.append(b,c.d); ul.append(li); }
+}
+$('rapBtn').addEventListener('click',()=>{renderRap();$('rap').hidden=false;$('rap').querySelector('.sheet').scrollTop=0;blip()});
+$('rap').addEventListener('click',e=>{ if(e.target.id==='rap'||e.target.id==='rapX') $('rap').hidden=true });
 $('recast').addEventListener('click',()=>{rollNames();blip();renderSetup()});
 $('go').addEventListener('click',()=>startTour());
 
@@ -1439,6 +1554,13 @@ function obituary(b){
   ou.className=got.length?'new':''; ou.innerHTML='';
   if(got.length){ const h=document.createElement('b'); h.textContent='UNLOCKED'; ou.append(h); for(const u of got){ const d=document.createElement('div'); d.textContent=u.what(); ou.append(d); } }
   else ou.textContent=nxt?`${(nxt.at-after).toLocaleString()} more lifetime fans to unlock ${nxt.tease}.`:'Everything is unlocked. Nothing left but the music.';
+  // rap sheet: charges this tour earned, and which of them are new
+  { const rap=store.get('rap',{}), earned=CHARGES.filter(c=>{ try{ return !!c.t(G,G.cfg) }catch(e){ return false } }), fresh=earned.filter(c=>!rap[c.id]);
+    for(const c of earned) rap[c.id]=(rap[c.id]||0)+1; store.set('rap',rap);
+    const or=$('orap'); or.innerHTML=''; or.className=fresh.length?'new':'';
+    if(fresh.length){ const h=document.createElement('b'); h.textContent=fresh.length>1?'NEW CHARGES':'NEW CHARGE'; or.append(h);
+      for(const c of fresh){ const d=document.createElement('div'), n=document.createElement('b'); n.textContent=c.n; d.append(n,c.d); or.append(d); } }
+    else or.textContent=`No new charges. ${rapCount()} of ${CHARGES.length} on the rap sheet.`; }
   lastShare=`THE PITS — ${cfg.name||'My band'} made ${fans.toLocaleString()} fans in ${st.gigs} gigs before the breakup. Rank: ${G.rank()}. Cause of death: ${b.cause} https://kevinguyer.github.io/the-pits/`;
   posterBlob=null;
   posterData={name:cfg.name||'Unnamed Band',fans,rank:G.rank(),cause:b.cause,members:G.members.map(m=>m.name),tour:st.tour.slice(),
